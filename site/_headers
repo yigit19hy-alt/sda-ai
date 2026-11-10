@@ -10,3 +10,10 @@
 
 /assets/brand/*
   Access-Control-Allow-Origin: *
+
+# Keep the Cloudflare preview addresses out of search results (only sda-services.ai is indexed)
+https://sda-ai-f39.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.sda-ai-f39.pages.dev/*
+  X-Robots-Tag: noindex

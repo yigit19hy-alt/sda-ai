@@ -30,7 +30,7 @@
     };
     var render = function(p){
       var steps = p.steps.map(function(t, i){ return '<li><b>Step '+(i+1)+'</b>'+esc(t)+'</li>'; }).join('');
-      var link = p.slug ? '<a class="link" href="services/'+p.slug+'.html">See the service <span class="arr">→</span></a>' : '<a class="link" href="contact.html">Book a discovery call <span class="arr">→</span></a>';
+      var link = p.slug ? '<a class="link" href="/services/'+p.slug+'">See the service <span class="arr">→</span></a>' : '<a class="link" href="/contact">Book a discovery call <span class="arr">→</span></a>';
       return '<div class="answer-h"><span class="orb"></span><span>Here is how we would build it</span></div><h2>'+esc(p.title)+'</h2><ol class="answer-steps">'+steps+'</ol><div class="answer-foot"><span class="tag"><i></i>'+esc(p.time)+' · '+esc(p.svc)+'</span>'+link+'</div>';
     };
     var show = function(p){

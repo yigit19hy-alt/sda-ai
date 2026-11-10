@@ -5,10 +5,10 @@ Edit content in this file (SERVICES, USE_CASES, page functions), then run:
     python3 build.py
 Change SITE_URL and EMAIL before going live.
 """
-import json, shutil, html, re
+import json, shutil, html, re, posixpath, datetime
 from pathlib import Path
 
-SITE_URL = "https://sda-ai.pages.dev"      # Cloudflare Pages address. Change to your own domain once it is connected.
+SITE_URL = "https://sda-services.ai"      # Live domain (Cloudflare Pages custom domain).
 EMAIL = "hello@sda-ai.services"            # TODO: your real email
 BRAND = "SDA AI Services"
 ROOT = Path(__file__).parent
@@ -233,6 +233,78 @@ def industries_block(r):
 
 SVC = {s["slug"]: s for s in SERVICES}
 UC = {u["slug"]: u for u in USE_CASES}
+
+# --------------------------------------------------------------------------
+# SEO: search titles (max ~60 chars) and descriptions (max ~160 chars)
+# --------------------------------------------------------------------------
+GCC = ["United Arab Emirates", "Saudi Arabia", "Qatar", "Kuwait", "Bahrain", "Oman"]
+SEO = {
+  "home": ("SDA AI Services | AI Automation & Software in Dubai, UAE",
+           "Dubai-based AI agency building AI agents, workflow automation and custom web and mobile apps for companies in the UAE and GCC. Free pilot project."),
+  "services": ("AI Development Services in Dubai, UAE | SDA AI Services",
+               "AI agents, workflow automation, web and mobile apps, data management and SAP integration for UAE and GCC companies. From prototype to production."),
+  "use-cases": ("AI Software Demos: Try {n} Live Use Cases | SDA AI Services",
+                "Try {n} interactive demos of AI business software: workflows, field service, HR, real estate, freight forwarding, construction, dashboards and more."),
+  "pricing": ("AI Development Pricing in the UAE (AED) | SDA AI Services",
+              "Free pilot project and unlimited revisions. Typical UAE prices in AED for AI agents, workflow automation, dashboards, web and mobile apps."),
+  "contact": ("Contact SDA AI Services | AI Agency in Dubai",
+              "Talk to our Dubai team about your AI, automation, web or app project. We reply within one business day with first ideas and a free pilot proposal."),
+  "ai-agents": ("AI Agent Development in Dubai | SDA AI Services",
+                "Custom AI agents and chatbots for UAE businesses: answers from your documents, actions in your systems, on WhatsApp, web and voice. Free pilot."),
+  "workflow-automation": ("AI Workflow Automation in Dubai, UAE | SDA AI Services",
+                          "Automate approvals, invoices, documents and reporting with AI. End-to-end process automation for UAE and GCC companies, with a free pilot."),
+  "web-applications": ("Custom Web App Development Dubai | SDA AI Services",
+                       "Custom web applications, portals and SaaS products with AI built in, for companies in Dubai, the UAE and GCC. Fixed prices and a free pilot."),
+  "mobile-apps": ("Mobile App Development in Dubai | SDA AI Services",
+                  "iOS, Android and offline field service apps for UAE teams: photos, GPS, signatures and checklists synced to your back office. Free pilot."),
+  "data-management": ("Data Management & AI Dashboards Dubai | SDA AI Services",
+                      "Clean, connected data and live KPI dashboards for UAE companies: data integration, master data and governance that your AI can rely on."),
+  "sap-integration": ("SAP AI Integration & SAP BTP in Dubai | SDA AI Services",
+                      "Connect AI to SAP S/4HANA, SAP BTP, CRMs and legacy systems in the UAE. Clean-core extensions, secure APIs and middleware without downtime."),
+  "construction": ("Construction Site Report & Snag App Demo | SDA AI Services",
+                   "Interactive construction and fit-out demo: daily site reports, snag lists, permits and claims in one app for contractors in the UAE."),
+  "dashboard": ("AI Management Dashboard Demo | SDA AI Services",
+                "Interactive KPI dashboard demo with drilldowns, AI-written summaries and report export. See what a custom management dashboard can do."),
+  "facility-management": ("AI Facility Management Software Demo | SDA AI Services",
+                          "Try a facility management demo: maintenance tickets, technician app, sensor alerts and documents in one system for property teams."),
+  "field-service": ("Field Service App Demo | SDA AI Services",
+                    "Interactive field service app demo: GPS check-in, photos, customer signatures and proof of delivery, synced to the office in real time."),
+  "freight-forwarding": ("Freight Forwarding Software Demo UAE | SDA AI Services",
+                         "Freight forwarding and customs clearance software demo for UAE forwarders: shipments, documents, customs status and customer updates."),
+  "hr-tool": ("AI HR Software Demo: Recruiting & Leave | SDA AI Services",
+              "Try an AI HR tool: emails become candidates, CVs are matched to jobs, leave is approved with a coverage check and HR questions get answered."),
+  "real-estate": ("Real Estate CRM Demo: Leads & Viewings | SDA AI Services",
+                  "Interactive real estate CRM demo: listings, leads, viewings, sales pipeline and contracts in one system for brokers and developers."),
+  "vendor-management": ("AI Vendor Management Software Demo | SDA AI Services",
+                        "Try a vendor management demo: RFQs, AI quote comparison, 8D complaints, approvals and supplier documents in one place."),
+  "workflow-management": ("Workflow Management Software Demo | SDA AI Services",
+                          "Interactive workflow management demo: tasks, approvals, process templates and document management for teams that want less email."),
+}
+
+def clean_url(path):
+    """Cloudflare Pages serves /x.html as /x and /dir/index.html as /dir/. Use those URLs everywhere."""
+    if path.endswith("index.html"):
+        return path[:-len("index.html")]
+    if path.endswith(".html"):
+        return path[:-len(".html")]
+    return path
+
+def abs_url(path):
+    return SITE_URL + "/" + clean_url(path)
+
+def clean_links(doc, page_path):
+    """Rewrite internal .html links to the clean URLs Cloudflare serves, so no click hits a redirect."""
+    base = posixpath.dirname(page_path)
+    def rep(m):
+        href = m.group(1)
+        if re.match(r"^(https?:|mailto:|tel:|#|data:|/api/)", href):
+            return m.group(0)
+        p, _, frag = href.partition("#")
+        if not p.endswith(".html"):
+            return m.group(0)
+        target = p.lstrip("/") if p.startswith("/") else posixpath.normpath(posixpath.join(base, p))
+        return 'href="/' + clean_url(target) + ("#" + frag if frag else "") + '"'
+    return re.sub(r'href="([^"]+)"', rep, doc)
 # --------------------------------------------------------------------------
 # Layout
 # --------------------------------------------------------------------------
@@ -260,18 +332,25 @@ def logo_svg(cls="logo-svg"):
 def logo(r):
     return f'<a class="logo" href="{r}index.html" aria-label="{BRAND} home">{logo_svg()}</a>'
 
-def head(r, path, title, meta, schema=None, demo=False):
-    url = SITE_URL + "/" + path
-    full_title = title if title.endswith(BRAND) else f"{title} | {BRAND}"
+def head(r, path, title, meta, schema=None, demo=False, noindex=False):
+    url = abs_url(path)
+    full_title = title if BRAND in title else f"{title} | {BRAND}"
+    robots = "noindex, follow" if noindex else "index, follow, max-image-preview:large, max-snippet:-1"
     ld = ""
     for s in (schema or []):
         ld += '<script type="application/ld+json">' + json.dumps(s, ensure_ascii=False) + "</script>\n"
     return f"""<title>{e(full_title)}</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="{e(meta)}">
+<meta name="robots" content="{robots}">
 <meta name="theme-color" content="#F7F9F9">
 <link rel="canonical" href="{url}">
+<link rel="alternate" hreflang="en" href="{url}">
+<link rel="alternate" hreflang="x-default" href="{url}">
+<meta name="geo.region" content="AE-DU">
+<meta name="geo.placename" content="Dubai">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="en_AE">
 <meta property="og:site_name" content="{BRAND}">
 <meta property="og:title" content="{e(full_title)}">
 <meta property="og:description" content="{e(meta)}">
@@ -279,8 +358,11 @@ def head(r, path, title, meta, schema=None, demo=False):
 <meta property="og:image" content="{SITE_URL}/assets/brand/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="twitter:image" content="{SITE_URL}/assets/brand/og-image.png">
+<meta property="og:image:alt" content="{BRAND}: AI agents, automation and custom software from Dubai">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{e(full_title)}">
+<meta name="twitter:description" content="{e(meta)}">
+<meta name="twitter:image" content="{SITE_URL}/assets/brand/og-image.png">
 <link rel="icon" href="{r}assets/brand/logo-mark.svg" type="image/svg+xml">
 <link rel="icon" href="{r}assets/brand/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="{r}assets/brand/apple-touch-icon.png">
@@ -326,7 +408,7 @@ def footer(r, demo=False):
     return f"""<footer>
   <div class="wrap">
     <div class="foot glass">
-      <div>{logo(r)}<p>AI software, web and app development for companies that want working systems in production.</p></div>
+      <div>{logo(r)}<p>AI software, web and app development for companies that want working systems in production. Based in Dubai, serving clients across the UAE and GCC.</p></div>
       <div><h4>Services</h4><ul>{svc}</ul></div>
       <div><h4>Industries</h4><ul>{inds}</ul></div>
       <div><h4>Company</h4><ul><li><a href="{r}pricing.html">Pricing</a></li><li><a href="{r}index.html#process">Process</a></li><li><a href="{r}index.html#stack">Technology</a></li><li><a href="{r}contact.html">Contact</a></li><li>{EMAIL}</li></ul></div>
@@ -347,12 +429,22 @@ def crumbs(r, items):
 
 def crumb_ld(items):
     return {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
-        {"@type": "ListItem", "position": i + 1, "name": n, "item": SITE_URL + "/" + (p or "")} for i, (n, p) in enumerate(items)]}
+        {"@type": "ListItem", "position": i + 1, "name": n, "item": abs_url(p or "")} for i, (n, p) in enumerate(items)]}
 
-ORG_LD = {"@context": "https://schema.org", "@type": "Organization", "name": BRAND, "url": SITE_URL + "/", "email": EMAIL,
-          "logo": SITE_URL + "/assets/brand/logo.png",
-          "description": "AI software, web and app development: AI agents, workflow automation, custom web and mobile apps, data management and enterprise integration.",
-          "knowsLanguage": ["en"]}
+ORG_ID = SITE_URL + "/#organization"
+ORG_LD = {"@context": "https://schema.org", "@type": "ProfessionalService", "@id": ORG_ID, "name": BRAND,
+          "alternateName": ["SDA", "Software, Development, Applications & AI Services", "SDA SERVICES L.L.C-FZ"],
+          "legalName": "SDA SERVICES L.L.C-FZ",
+          "url": SITE_URL + "/", "email": EMAIL,
+          "logo": SITE_URL + "/assets/brand/logo.png", "image": SITE_URL + "/assets/brand/og-image.png",
+          "description": "Dubai-based AI agency: AI agents, workflow automation, custom web and mobile apps, data management and SAP integration for companies in the UAE and GCC.",
+          "address": {"@type": "PostalAddress", "streetAddress": "Meydan Grandstand, 6th floor, Meydan Road, Nad Al Sheba",
+                      "addressLocality": "Dubai", "addressRegion": "Dubai", "addressCountry": "AE"},
+          "areaServed": [{"@type": "Country", "name": c} for c in GCC],
+          "knowsLanguage": ["en", "ar"], "priceRange": "AED 10,900+",
+          "knowsAbout": ["AI agents", "Workflow automation", "Custom web applications", "Mobile apps", "Data management", "SAP integration"]}
+WEBSITE_LD = {"@context": "https://schema.org", "@type": "WebSite", "@id": SITE_URL + "/#website", "name": BRAND, "url": SITE_URL + "/",
+              "inLanguage": "en", "publisher": {"@id": ORG_ID}}
 
 # ---- small visuals for the bento tiles ----
 _I = lambda p: f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{p}</svg>'
@@ -438,8 +530,8 @@ def contact_block(heading_tag="h2"):
   </form>
 </div>"""
 
-def page(r, path, title, meta, active, body, schema=None, demo=False):
-    return head(r, path, title, meta, schema, demo) + nav(r, active) + f'\n<main id="main">\n{body}\n</main>\n' + footer(r, demo)
+def page(r, path, title, meta, active, body, schema=None, demo=False, noindex=False):
+    return head(r, path, title, meta, schema, demo, noindex) + nav(r, active) + f'\n<main id="main">\n{body}\n</main>\n' + footer(r, demo)
 
 def page_hero(r, items, h1, lede, extra="", side=""):
     solo = "" if side else " solo"
@@ -479,7 +571,7 @@ def home():
     pdata = json.dumps([dict(q=p["q"], title=p["title"], steps=p["steps"], time=p["time"], slug=p["slug"], svc=SVC[p["slug"]]["name"]) for p in PROMPTS])
     body = f"""<header class="hero"><div class="wrap">
   <h1 class="rise">AI that works the way your <span class="soft">team</span> does{SPG()}</h1>
-  <p class="lede rise d1">SDA AI Services designs, builds and runs <b>AI agents, automation and custom software</b> for companies that want working systems in production, not slide decks.</p>
+  <p class="lede rise d1">From Dubai, SDA AI Services designs, builds and runs <b>AI agents, automation and custom software</b> for companies across the UAE and GCC that want working systems in production, not slide decks.</p>
   <div class="cta-row rise d2"><a class="btn btn-primary" href="contact.html">Book a discovery call <span class="arr">→</span></a><a class="btn btn-glass" href="use-cases/index.html">Try the live demos</a></div>
   <div class="ask rise d3" id="prompt">
     <form class="ask-bar" id="ask-form" role="search" aria-label="Describe what you want to automate">
@@ -527,9 +619,7 @@ def home():
 </div></section>
 
 <section class="block" id="contact" style="padding-top:20px"><div class="wrap">{contact_block()}</div></section>"""
-    return page(r, "", f"{BRAND} | AI Software, Web & App Development",
-                "SDA AI Services builds AI agents, workflow automation, custom web and mobile apps, data management and enterprise integrations. From prototype to production.",
-                "home", body, [ORG_LD, {"@context": "https://schema.org", "@type": "WebSite", "name": BRAND, "url": SITE_URL + "/"}], demo=True)
+    return page(r, "", *SEO["home"], "home", body, [ORG_LD, WEBSITE_LD], demo=True)
 
 def services_hub():
     r = "../"
@@ -542,9 +632,8 @@ def services_hub():
 {cta_band(r)}"""
     ld = [crumb_ld([("Home", ""), ("Services", "services/")]),
           {"@context": "https://schema.org", "@type": "ItemList", "itemListElement": [
-              {"@type": "ListItem", "position": i + 1, "url": f"{SITE_URL}/services/{s['slug']}.html", "name": s["name"]} for i, s in enumerate(SERVICES)]}]
-    return page(r, "services/", "AI Software & App Development Services",
-                "Overview of SDA AI Services: AI agents, workflow automation, custom web apps, mobile apps, data management and enterprise integration.", "services", body, ld)
+              {"@type": "ListItem", "position": i + 1, "url": abs_url(f"services/{s['slug']}.html"), "name": s["name"]} for i, s in enumerate(SERVICES)]}]
+    return page(r, "services/", *SEO["services"], "services", body, ld)
 
 def service_page(s):
     r = "../"
@@ -589,20 +678,20 @@ def service_page(s):
 </div></section>
 {cta_band(r, f"Ready to talk about {e(s['name'])}?")}"""
     ld = [crumb_ld([("Home", ""), ("Services", "services/"), (s["name"], path)]),
-          {"@context": "https://schema.org", "@type": "Service", "name": s["title"], "serviceType": s["name"], "description": s["meta"],
-           "provider": {"@type": "Organization", "name": BRAND, "url": SITE_URL + "/"}, "areaServed": ["Europe", "United States"], "url": f"{SITE_URL}/{path}"},
+          {"@context": "https://schema.org", "@type": "Service", "name": s["title"], "serviceType": s["name"], "description": SEO[s["slug"]][1],
+           "provider": {"@id": ORG_ID}, "areaServed": [{"@type": "Country", "name": c} for c in GCC], "url": abs_url(path)},
           {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
               {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in s["faq"]]}]
-    return page(r, path, s["title"], s["meta"], "services", body, ld)
+    return page(r, path, *SEO[s["slug"]], "services", body, [ORG_LD] + ld)
 
 def uc_hub():
     r = "../"
     body = page_hero(r, [("Home", "index.html"), ("Use cases", None)], "See what AI software can do for your team",
-                     "Four interactive demos of the software we build. Each runs in your browser on example data, and each can be adapted to your processes and connected to your systems.") + f"""
+                     f"{len(USE_CASES)} interactive demos of the software we build. Each runs in your browser on example data, and each can be adapted to your processes and connected to your systems.") + f"""
 <section class="block" style="padding-top:20px"><div class="wrap">{uc_switch(r)}</div></section>
 {cta_band(r, "Need something similar?", "We adapt these demos to your data, processes and systems, usually starting with a two-week prototype.")}"""
-    return page(r, "use-cases/", "AI Software Use Cases & Live Demos",
-                "Interactive AI software demos: vendor management, field service with proof of delivery, facility management, and an HR tool. See what SDA AI Services can build for you.",
+    t, m = SEO["use-cases"]
+    return page(r, "use-cases/", t.format(n=len(USE_CASES)), m.format(n=len(USE_CASES)),
                 "use-cases", body, [crumb_ld([("Home", ""), ("Use cases", "use-cases/")])], demo=True)
 
 
@@ -628,8 +717,10 @@ def uc_page(u):
 {cta_band(r, e(u.get('cta') or f"Want this for your {u['label'].lower()} team?"), "We adapt the demo to your data and systems, usually starting with a two-week prototype.")}"""
     ld = [crumb_ld([("Home", ""), ("Use cases", "use-cases/"), (u["name"], path)]),
           {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": f"{u['name']} demo", "applicationCategory": "BusinessApplication",
-           "operatingSystem": "Web", "description": u["meta"], "url": f"{SITE_URL}/{path}", "creator": {"@type": "Organization", "name": BRAND}}]
-    return page(r, path, u["title"], u["meta"], "use-cases", body, ld, demo=True)
+           "operatingSystem": "Web", "description": u["meta"], "url": abs_url(path), "creator": {"@id": ORG_ID},
+           "offers": {"@type": "Offer", "price": "0", "priceCurrency": "AED", "description": "Free interactive demo"}}]
+    t, m = SEO.get(u["slug"], (u["title"], u["meta"]))
+    return page(r, path, t, m, "use-cases", body, ld, demo=True)
 
 # --------------------------------------------------------------------------
 # Pricing (UAE market prices, AED, excl. 5 % VAT)
@@ -725,26 +816,19 @@ def pricing():
     ld = [crumb_ld([("Home", ""), ("Pricing", "pricing.html")]),
           {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
               {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in PRICE_FAQ]}]
-    return page(r, "pricing.html", "Pricing: AI Agents, Automation & Custom Software",
-                "Free pilot project and unlimited revisions. Typical UAE prices for AI agents, workflow automation, dashboards, web and mobile apps, in AED excl. VAT.",
-                "pricing", body, ld)
+    return page(r, "pricing.html", *SEO["pricing"], "pricing", body, ld)
 
 def contact():
     r = ""
     body = f"""<section class="block" style="padding-top:64px"><div class="wrap">{crumbs(r, [("Home", "index.html"), ("Contact", None)])}{contact_block("h1")}</div></section>"""
-    return page(r, "contact.html", "Contact SDA AI Services",
-                "Talk to SDA AI Services about your AI, web or app project. We reply within one business day with first ideas and a next step.",
-                "contact", body, [ORG_LD])
+    return page(r, "contact.html", *SEO["contact"], "contact", body, [ORG_LD])
 
 
 def simple_page(path, title, meta, h1, body_html, noindex=False):
     r = ""
     hdr = page_hero(r, [("Home", "index.html"), (title, None)], h1, meta)
     body = hdr + f'<section class="block" style="padding-top:12px"><div class="wrap"><div class="prose legal glass">{body_html}</div></div></section>'
-    html_ = page(r, path, title, meta, "", body)
-    if noindex:
-        html_ = html_.replace('<meta name="description"', '<meta name="robots" content="noindex">\n<meta name="description"', 1)
-    return html_
+    return page(r, path, title, meta, "", body, noindex=noindex)
 
 # NOTE: legal texts are templates. Replace every [bracketed] value and have them reviewed before going live.
 def privacy():
@@ -800,17 +884,19 @@ def main():
     for p, frag in pages.items():
         out = OUT / p
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(standalone(frag), encoding="utf-8")
+        out.write_text(clean_links(standalone(frag), p), encoding="utf-8")
     # preview entry for the claude.ai artifact (skeleton is added by the host)
     # bundle the demos: shared toolkit first, then each demo in site order
     parts = [DEMO_DIR / "_shared"] + [DEMO_DIR / s for s in DEMO_ORDER]
     (OUT / "assets" / "demos.js").write_text("\n".join((d / f).read_text(encoding="utf-8") for d in parts for f in (["shared.js"] if d.name == "_shared" else ["demo.js"])), encoding="utf-8")
     (OUT / "assets" / "demos.css").write_text("\n".join((d / f).read_text(encoding="utf-8") for d in parts for f in (["shared.css"] if d.name == "_shared" else ["demo.css"])), encoding="utf-8")
     (ROOT / "preview.html").write_text(pages["index.html"], encoding="utf-8")
-    urls = "".join(f"  <url><loc>{SITE_URL}/{'' if p == 'index.html' else p}</loc></url>\n" for p in pages if p not in ("404.html", "thanks.html"))
+    today = datetime.date.today().isoformat()
+    prio = lambda p: "1.0" if p == "index.html" else "0.9" if p in ("services/index.html", "pricing.html", "contact.html") or p.startswith("services/") else "0.3" if p in ("privacy.html", "legal-notice.html") else "0.7"
+    urls = "".join(f"  <url><loc>{abs_url(p)}</loc><lastmod>{today}</lastmod><priority>{prio(p)}</priority></url>\n" for p in pages if p not in ("404.html", "thanks.html"))
     (OUT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
     shutil.copy(ROOT / "src" / "_headers", OUT / "_headers")
-    (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n")
+    (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: {SITE_URL}/sitemap.xml\n")
     (OUT / "site.webmanifest").write_text(json.dumps({"name": BRAND, "short_name": "SDA AI", "start_url": "/", "display": "standalone",
         "background_color": "#F8F7F5", "theme_color": "#C2410C", "icons": [
             {"src": "/assets/brand/icon-192.png", "sizes": "192x192", "type": "image/png"},
