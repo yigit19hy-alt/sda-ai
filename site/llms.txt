@@ -1,0 +1,49 @@
+# SDA AI Services
+
+> Dubai-based AI agency (SDA SERVICES L.L.C-FZ, Meydan, Dubai, UAE). SDA stands for Software, Development, Applications & AI Services. We build AI agents, workflow automation, custom web and mobile apps, data management and SAP integration for companies in the UAE and GCC. Every project starts with a free pilot; prices are fixed, in AED, with no per-user fees. Languages: English and Arabic.
+
+Contact: hello@sda-ai.services · https://sda-services.ai/contact
+
+## Services
+- [AI agents & assistants](https://sda-services.ai/services/ai-agents): Custom AI agents and chatbots for UAE businesses: answers from your documents, actions in your systems, on WhatsApp, web and voice. Free pilot.
+- [Workflow automation](https://sda-services.ai/services/workflow-automation): Automate approvals, invoices, documents and reporting with AI. End-to-end process automation for UAE and GCC companies, with a free pilot.
+- [Custom web applications](https://sda-services.ai/services/web-applications): Custom web applications, portals and SaaS products with AI built in, for companies in Dubai, the UAE and GCC. Fixed prices and a free pilot.
+- [Mobile & field apps](https://sda-services.ai/services/mobile-apps): iOS, Android and offline field service apps for UAE teams: photos, GPS, signatures and checklists synced to your back office. Free pilot.
+- [Data management](https://sda-services.ai/services/data-management): Clean, connected data and live KPI dashboards for UAE companies: data integration, master data and governance that your AI can rely on.
+- [Enterprise & SAP integration](https://sda-services.ai/services/sap-integration): Connect AI to SAP S/4HANA, SAP BTP, CRMs and legacy systems in the UAE. Clean-core extensions, secure APIs and middleware without downtime.
+
+## Solutions
+- [WhatsApp AI chatbot](https://sda-services.ai/solutions/whatsapp-ai-chatbot): WhatsApp AI chatbots for UAE businesses on the official WhatsApp Business Platform: answers, bookings, order status and human handover, in Arabic and English.
+- [Arabic AI assistant](https://sda-services.ai/solutions/arabic-ai-chatbot): Arabic AI chatbots and assistants for GCC companies: Modern Standard Arabic and Gulf dialects, right-to-left interfaces, answers from your own documents.
+- [AI document processing](https://sda-services.ai/solutions/ai-document-processing): AI document processing for UAE companies: invoices, delivery notes, contracts and forms in Arabic and English read, checked and entered into your ERP.
+
+## Industries
+- [Manufacturing](https://sda-services.ai/industries/manufacturing): AI for UAE and GCC manufacturers: supplier quality, 8D complaints, inspection data and production reporting connected to SAP and your ERP.
+- [Logistics & wholesale](https://sda-services.ai/industries/logistics): AI automation for UAE logistics and wholesale companies: order intake from email, proof of delivery, customs documents and customer updates.
+- [Construction & field service](https://sda-services.ai/industries/construction): Construction and field service software for UAE contractors: daily site reports, snag lists, permits, timesheets and signatures, from site to invoice.
+- [Real estate & facilities](https://sda-services.ai/industries/real-estate): AI and custom software for UAE real estate and facility teams: lead handling, viewings, tenant requests, maintenance tickets and service partners.
+- [Professional services](https://sda-services.ai/industries/professional-services): AI assistants for UAE law, accounting, consulting and engineering firms: answers from your documents, client intake, proposals and reporting.
+- [Energy & utilities](https://sda-services.ai/industries/energy): AI and mobile software for GCC energy and utility companies: field crews, asset data, inspections and maintenance plans connected to SAP and core systems.
+
+## Regions
+- [Abu Dhabi](https://sda-services.ai/locations/abu-dhabi): AI agents, automation and custom software for companies in Abu Dhabi. UAE-based team, Arabic and English, UAE data protection, free pilot project.
+- [Saudi Arabia](https://sda-services.ai/locations/saudi-arabia): AI agents, automation and custom software for companies in Riyadh, Jeddah and Dammam. Arabic-first, PDPL-aware, hosting options in the Kingdom.
+- [Qatar](https://sda-services.ai/locations/qatar): AI agents, automation and custom software for companies in Doha and across Qatar. Arabic and English, Qatar data protection, free pilot project.
+- [Kuwait](https://sda-services.ai/locations/kuwait): AI agents, workflow automation and custom software for companies in Kuwait. Arabic and English assistants, ERP integration and a free pilot project.
+- [Bahrain](https://sda-services.ai/locations/bahrain): AI agents, automation and custom software for companies in Manama and across Bahrain. PDPL-aware design, local cloud hosting, Arabic and English.
+- [Oman](https://sda-services.ai/locations/oman): AI agents, automation and custom software for companies in Muscat and across Oman. Designed for Oman's PDPL, Arabic and English, free pilot project.
+
+## Live demos
+- [Workflow management](https://sda-services.ai/use-cases/workflow-management): Interactive workflow management demo: tasks, approvals, process templates and document management for teams that want less email.
+- [Field service & proof of delivery](https://sda-services.ai/use-cases/field-service): Interactive field service app demo: GPS check-in, photos, customer signatures and proof of delivery, synced to the office in real time.
+- [HR tool](https://sda-services.ai/use-cases/hr-tool): Try an AI HR tool: emails become candidates, CVs are matched to jobs, leave is approved with a coverage check and HR questions get answered.
+- [Real estate agency](https://sda-services.ai/use-cases/real-estate): Interactive real estate CRM demo: listings, leads, viewings, sales pipeline and contracts in one system for brokers and developers.
+- [Freight forwarding & customs](https://sda-services.ai/use-cases/freight-forwarding): Freight forwarding and customs clearance software demo for UAE forwarders: shipments, documents, customs status and customer updates.
+- [Construction & fit-out](https://sda-services.ai/use-cases/construction): Interactive construction and fit-out demo: daily site reports, snag lists, permits and claims in one app for contractors in the UAE.
+- [Management dashboard](https://sda-services.ai/use-cases/dashboard): Interactive KPI dashboard demo with drilldowns, AI-written summaries and report export. See what a custom management dashboard can do.
+- [Vendor management](https://sda-services.ai/use-cases/vendor-management): Try a vendor management demo: RFQs, AI quote comparison, 8D complaints, approvals and supplier documents in one place.
+- [Facility management](https://sda-services.ai/use-cases/facility-management): Try a facility management demo: maintenance tickets, technician app, sensor alerts and documents in one system for property teams.
+
+## Company
+- [Pricing](https://sda-services.ai/pricing): Free pilot project and unlimited revisions. Typical UAE prices in AED for AI agents, workflow automation, dashboards, web and mobile apps.
+- [Contact](https://sda-services.ai/contact): Talk to our Dubai team about your AI, automation, web or app project. We reply within one business day with first ideas and a free pilot proposal.

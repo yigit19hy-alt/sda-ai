@@ -199,6 +199,10 @@ USE_CASES, UC_ICONS, DEMOS = [], {}, {}
 for _slug in DEMO_ORDER:
     _meta = _load(_slug, "meta")
     USE_CASES.append(_meta.USE_CASE); UC_ICONS[_slug] = _meta.ICON; DEMOS[_slug] = _load(_slug, "markup").markup
+_lp_spec = _ilu.spec_from_file_location("landing", ROOT / "src" / "landing.py")
+_LP = _ilu.module_from_spec(_lp_spec); _lp_spec.loader.exec_module(_LP)
+LANDING, HUBS = _LP.PAGES, _LP.HUBS
+LP_BY_KIND = {k: [x for x in LANDING if x["kind"] == k] for k in HUBS}
 IND_ICON = lambda d: f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{d}</svg>'
 INDUSTRIES = [
   dict(slug="manufacturing", name="Manufacturing",
@@ -228,8 +232,8 @@ INDUSTRIES = [
 ]
 
 def industries_block(r):
-    cards = "".join(f"""<article class="ind glass" id="ind-{i['slug']}"><span class="ind-ic" aria-hidden="true">{i['icon']}</span><h3>{e(i['name'])}</h3><p>{e(i['line'])}</p><div class="ind-links">{"".join(f'<a href="{r}{h}">{e(t)} <span class="arr">→</span></a>' for t, h in i['links'])}</div></article>""" for i in INDUSTRIES)
-    return f"""<div class="sec-head"><h2>Built for your industry</h2><p>The same building blocks, shaped around the processes, data and rules of your sector.</p></div><div class="inds">{cards}</div>"""
+    cards = "".join(f"""<article class="ind glass" id="ind-{i['slug']}"><span class="ind-ic" aria-hidden="true">{i['icon']}</span><h3>{e(i['name'])}</h3><p>{e(i['line'])}</p><div class="ind-links">{"".join(f'<a href="{r}{h}">{e(t)} <span class="arr">→</span></a>' for t, h in [(f"AI for {i['name'].lower()}", f"industries/{i['slug']}.html")] + i['links'])}</div></article>""" for i in INDUSTRIES)
+    return f"""<div class="sec-head"><h2>Built for your industry</h2><p>The same building blocks, shaped around the processes, data and rules of your sector. <a class="link" href="{r}industries/index.html">All industries <span class="arr">→</span></a></p></div><div class="inds">{cards}</div>"""
 
 SVC = {s["slug"]: s for s in SERVICES}
 UC = {u["slug"]: u for u in USE_CASES}
@@ -403,7 +407,9 @@ def nav(r, active):
 
 def footer(r, demo=False):
     svc = "".join(f'<li><a href="{r}services/{s["slug"]}.html">{e(s["name"])}</a></li>' for s in SERVICES)
-    inds = "".join(f'<li><a href="{r}index.html#ind-{i["slug"]}">{e(i["name"])}</a></li>' for i in INDUSTRIES)
+    svc += "".join(f'<li><a href="{r}solutions/{x["slug"]}.html">{e(x["name"])}</a></li>' for x in LP_BY_KIND["solutions"])
+    inds = "".join(f'<li><a href="{r}industries/{i["slug"]}.html">{e(i["name"])}</a></li>' for i in INDUSTRIES)
+    regs = f'<li><a href="{r}index.html">Dubai</a></li>' + "".join(f'<li><a href="{r}locations/{x["slug"]}.html">{e(x["name"])}</a></li>' for x in LP_BY_KIND["locations"])
     demo_js = f'\n<script src="{r}assets/demos.js?v={ASSET_V}"></script>' if demo else ""
     return f"""<footer>
   <div class="wrap">
@@ -411,6 +417,7 @@ def footer(r, demo=False):
       <div>{logo(r)}<p>AI software, web and app development for companies that want working systems in production. Based in Dubai, serving clients across the UAE and GCC.</p></div>
       <div><h4>Services</h4><ul>{svc}</ul></div>
       <div><h4>Industries</h4><ul>{inds}</ul></div>
+      <div><h4>Regions</h4><ul>{regs}</ul></div>
       <div><h4>Company</h4><ul><li><a href="{r}pricing.html">Pricing</a></li><li><a href="{r}index.html#process">Process</a></li><li><a href="{r}index.html#stack">Technology</a></li><li><a href="{r}contact.html">Contact</a></li><li>{EMAIL}</li></ul></div>
     </div>
     <div class="foot-base"><span>© <span id="yr">2026</span> {BRAND}</span><span><a href="{r}privacy.html">Privacy policy</a> · <a href="{r}legal-notice.html">Legal notice</a></span></div>
@@ -627,6 +634,11 @@ def services_hub():
                      "From AI agents to enterprise integration, we cover the full path from idea to production software. Pick a service to see what we deliver, typical projects and answers to common questions.") + f"""
 <section class="block" style="padding-top:20px"><div class="wrap">{bento(r)}</div></section>
 <section class="block" style="padding-top:0"><div class="wrap">
+  <div class="sec-head left" style="margin-bottom:28px"><h2>Focused solutions</h2><p>Proven setups for the requests we hear most often in the UAE and GCC.</p></div>
+  <div class="related">{"".join(f'<a class="glass" href="{r}solutions/{x["slug"]}.html"><b>{e(x["name"])}</b><span>{e(x["meta"])}</span></a>' for x in LP_BY_KIND["solutions"])}</div>
+  <p class="note" style="margin-top:22px">Looking for your sector or country? See <a class="link" href="{r}industries/index.html">AI by industry</a> and <a class="link" href="{r}locations/index.html">AI across the GCC</a>.</p>
+</div></section>
+<section class="block" style="padding-top:0"><div class="wrap">
   <div class="sec-head"><h2>One process for every service</h2><p>Short cycles and working software at every checkpoint.</p></div>{PROCESS}
 </div></section>
 {cta_band(r)}"""
@@ -818,6 +830,83 @@ def pricing():
               {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in PRICE_FAQ]}]
     return page(r, "pricing.html", *SEO["pricing"], "pricing", body, ld)
 
+def lp_page(p):
+    r = "../"
+    kind = p["kind"]; hub = HUBS[kind]
+    path = f"{kind}/{p['slug']}.html"
+    items = [("Home", "index.html"), (hub["name"], f"{kind}/index.html"), (p["name"], None)]
+    facts = "".join(f"<div><dt>{e(k)}</dt><dd>{e(v)}</dd></div>" for k, v in p["facts"])
+    d0 = UC[p["demos"][0]]
+    extra = f'<div class="cta-row"><a class="btn btn-primary" href="{r}contact.html">Request a free pilot <span class="arr">→</span></a><a class="btn btn-glass" href="{r}use-cases/{d0["slug"]}.html">Try the {e(d0["name"])} demo</a></div>'
+    points = "".join(f'<div class="glass"><h3>{SP}{e(t)}</h3><p>{e(d)}</p></div>' for t, d in p["points"])
+    ex = "".join(f"<li><b>{e(t)}</b><span>{e(d)}</span></li>" for t, d in p["examples"])
+    demos = "".join(f'<a class="glass" href="{r}use-cases/{k}.html"><b>{e(UC[k]["name"])} demo</b><span>{e(UC[k]["card"])}</span></a>' for k in p["demos"])
+    svcs = "".join(f'<a class="glass" href="{r}services/{k}.html"><b>{e(SVC[k]["name"])}</b><span>{e(SVC[k]["short"])}</span></a>' for k in p["services"])
+    faq = "".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in p["faq"])
+    others = "".join(f'<a href="{r}{kind}/{x["slug"]}.html">{e(x["name"])}</a>' for x in LP_BY_KIND[kind] if x["slug"] != p["slug"])
+    body = page_hero(r, items, e(p["h1"]), e(p["lede"]), extra, f'<dl class="facts glass-strong">{facts}</dl>') + f"""
+<section class="block" style="padding-top:48px"><div class="wrap two">
+  <h2>{e(p['intro_h'])}</h2>
+  <div class="prose">{''.join(f'<p>{e(x)}</p>' for x in p['intro'])}</div>
+</div></section>
+
+<section class="block" style="padding-top:0"><div class="wrap">
+  <div class="sec-head"><h2>{e(p['points_h'])}</h2><p>Every part can be delivered on its own or combined into one solution.</p></div>
+  <div class="deliv">{points}</div>
+</div></section>
+
+<section class="block" style="padding-top:0"><div class="wrap two">
+  <div><h2>Typical projects</h2><p class="intro">Examples of where AI pays off first.</p></div>
+  <ul class="ex-list glass">{ex}</ul>
+</div></section>
+
+<section class="block" style="padding-top:0"><div class="wrap">
+  <div class="sec-head left" style="margin-bottom:28px"><h2>Try it in your browser</h2><p>Working demos of the kind of software we build, running on example data.</p></div>
+  <div class="related">{demos}</div>
+</div></section>
+
+<section class="block" style="padding-top:0"><div class="wrap">
+  <div class="sec-head left" style="margin-bottom:28px"><h2>Services behind it</h2></div>
+  <div class="related">{svcs}</div>
+</div></section>
+
+<section class="block" style="padding-top:0"><div class="wrap two">
+  <h2>Common questions</h2>
+  <div class="faq glass">{faq}</div>
+</div></section>
+
+<section class="block" style="padding-top:0"><div class="wrap">
+  <p class="note lp-more"><b>More {e(hub['name'].lower())}:</b> {others}</p>
+</div></section>
+{cta_band(r, e(p['cta']), "Tell us about your process. We reply within one business day and propose a free pilot you can test with your own examples.")}"""
+    area = [{"@type": "Country", "name": p["country"]}] if kind == "locations" else [{"@type": "Country", "name": c} for c in GCC]
+    svc_ld = {"@context": "https://schema.org", "@type": "Service", "name": p["h1"], "description": p["meta"], "url": abs_url(path),
+              "provider": {"@id": ORG_ID}, "areaServed": area, "serviceType": p["name"]}
+    if kind == "industries":
+        svc_ld["audience"] = {"@type": "BusinessAudience", "audienceType": p["name"]}
+    ld = [crumb_ld([("Home", ""), (hub["name"], f"{kind}/"), (p["name"], path)]), svc_ld,
+          {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+              {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in p["faq"]]}]
+    return page(r, path, p["title"], p["meta"], "services", body, [ORG_LD] + ld)
+
+def lp_hub(kind):
+    r = "../"
+    hub = HUBS[kind]
+    cards = "".join(f'<a class="glass" href="{r}{kind}/{x["slug"]}.html"><b>{e(x["h1"])}</b><span>{e(x["meta"])}</span></a>' for x in LP_BY_KIND[kind])
+    extra = ""
+    if kind == "locations":
+        extra = f'<p class="note" style="margin-top:22px">Based in Dubai? Start on our <a class="link" href="{r}index.html">homepage</a> or see all <a class="link" href="{r}services/index.html">services</a>.</p>'
+    body = page_hero(r, [("Home", "index.html"), (hub["name"], None)], e(hub["h1"]), e(hub["lede"])) + f"""
+<section class="block" style="padding-top:20px"><div class="wrap"><div class="related">{cards}</div>{extra}</div></section>
+<section class="block" style="padding-top:0"><div class="wrap">
+  <div class="sec-head"><h2>How a project runs</h2><p>Working software at every checkpoint, starting with a free pilot.</p></div>{PROCESS}
+</div></section>
+{cta_band(r)}"""
+    ld = [crumb_ld([("Home", ""), (hub["name"], f"{kind}/")]),
+          {"@context": "https://schema.org", "@type": "ItemList", "itemListElement": [
+              {"@type": "ListItem", "position": i + 1, "url": abs_url(f"{kind}/{x['slug']}.html"), "name": x["h1"]} for i, x in enumerate(LP_BY_KIND[kind])]}]
+    return page(r, f"{kind}/", hub["title"], hub["meta"], "services", body, ld)
+
 def contact():
     r = ""
     body = f"""<section class="block" style="padding-top:64px"><div class="wrap">{crumbs(r, [("Home", "index.html"), ("Contact", None)])}{contact_block("h1")}</div></section>"""
@@ -881,6 +970,10 @@ def main():
         pages[f"services/{s['slug']}.html"] = service_page(s)
     for u in USE_CASES:
         pages[f"use-cases/{u['slug']}.html"] = uc_page(u)
+    for kind in HUBS:
+        pages[f"{kind}/index.html"] = lp_hub(kind)
+    for x in LANDING:
+        pages[f"{x['kind']}/{x['slug']}.html"] = lp_page(x)
     for p, frag in pages.items():
         out = OUT / p
         out.parent.mkdir(parents=True, exist_ok=True)
@@ -892,11 +985,24 @@ def main():
     (OUT / "assets" / "demos.css").write_text("\n".join((d / f).read_text(encoding="utf-8") for d in parts for f in (["shared.css"] if d.name == "_shared" else ["demo.css"])), encoding="utf-8")
     (ROOT / "preview.html").write_text(pages["index.html"], encoding="utf-8")
     today = datetime.date.today().isoformat()
-    prio = lambda p: "1.0" if p == "index.html" else "0.9" if p in ("services/index.html", "pricing.html", "contact.html") or p.startswith("services/") else "0.3" if p in ("privacy.html", "legal-notice.html") else "0.7"
+    prio = lambda p: "1.0" if p == "index.html" else "0.9" if p in ("services/index.html", "pricing.html", "contact.html") or p.startswith("services/") else "0.3" if p in ("privacy.html", "legal-notice.html") else "0.8" if p.split("/")[0] in HUBS else "0.7"
     urls = "".join(f"  <url><loc>{abs_url(p)}</loc><lastmod>{today}</lastmod><priority>{prio(p)}</priority></url>\n" for p in pages if p not in ("404.html", "thanks.html"))
     (OUT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
     shutil.copy(ROOT / "src" / "_headers", OUT / "_headers")
     (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: {SITE_URL}/sitemap.xml\n")
+    # llms.txt: plain-language map of the site for AI search engines (ChatGPT, Perplexity, Gemini, Claude)
+    sec = lambda items: "".join(f"- [{n}]({u}): {d}\n" for n, u, d in items)
+    llms = (f"# {BRAND}\n\n> Dubai-based AI agency (SDA SERVICES L.L.C-FZ, Meydan, Dubai, UAE). SDA stands for Software, Development, Applications & AI Services. "
+            "We build AI agents, workflow automation, custom web and mobile apps, data management and SAP integration for companies in the UAE and GCC. "
+            "Every project starts with a free pilot; prices are fixed, in AED, with no per-user fees. Languages: English and Arabic.\n\n"
+            f"Contact: {EMAIL} · {abs_url('contact.html')}\n\n"
+            "## Services\n" + sec([(x["name"], abs_url(f"services/{x['slug']}.html"), SEO[x["slug"]][1]) for x in SERVICES]) +
+            "\n## Solutions\n" + sec([(x["name"], abs_url(f"solutions/{x['slug']}.html"), x["meta"]) for x in LP_BY_KIND["solutions"]]) +
+            "\n## Industries\n" + sec([(x["name"], abs_url(f"industries/{x['slug']}.html"), x["meta"]) for x in LP_BY_KIND["industries"]]) +
+            "\n## Regions\n" + sec([(x["name"], abs_url(f"locations/{x['slug']}.html"), x["meta"]) for x in LP_BY_KIND["locations"]]) +
+            "\n## Live demos\n" + sec([(u["name"], abs_url(f"use-cases/{u['slug']}.html"), SEO.get(u["slug"], (0, u["meta"]))[1]) for u in USE_CASES]) +
+            "\n## Company\n" + sec([("Pricing", abs_url("pricing.html"), SEO["pricing"][1]), ("Contact", abs_url("contact.html"), SEO["contact"][1])]))
+    (OUT / "llms.txt").write_text(llms, encoding="utf-8")
     (OUT / "site.webmanifest").write_text(json.dumps({"name": BRAND, "short_name": "SDA AI", "start_url": "/", "display": "standalone",
         "background_color": "#F8F7F5", "theme_color": "#C2410C", "icons": [
             {"src": "/assets/brand/icon-192.png", "sizes": "192x192", "type": "image/png"},

@@ -42,7 +42,8 @@ Without either, the form tells visitors to email you directly.
 ## Before launch
 
 - [ ] Set `EMAIL` in `build.py` to your real address (currently `hello@sda-ai.services`).
-- [ ] Set `SITE_URL` in `build.py` to your final domain once it is connected (currently `https://sda-ai.pages.dev`).
+- [x] `SITE_URL` in `build.py` is set to `https://sda-services.ai`.
+- SEO landing pages (industries, GCC regions, solutions) live in `src/landing.py`. Keep each page unique.
 - [ ] Fill in every `[bracketed]` value in the privacy policy and legal notice (`privacy()` and `legal()` in `build.py`) and have them reviewed.
 - [ ] Configure the contact form (see above).
 - [ ] Rebuild with `python3 build.py`, commit and push.
