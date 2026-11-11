@@ -18,6 +18,9 @@ SOCIAL = []       # profile URLs, e.g. ["https://www.linkedin.com/company/sda-ai
 LICENSE_NO = ""   # trade licence number, shown in the legal notice
 ANALYTICS = False # set True once Cloudflare Web Analytics is switched on (adds the note to the privacy policy)
 HOURS = "Monday to Friday, 9:00 to 17:00 (Dubai time, GST)"
+# Search engine ownership tags (meta tag method; the page must stay online for verification to remain valid)
+GOOGLE_VERIFY = "W83usJuTZkKzF4BUP-gteEH0HNXG2-AM-9VH7z4Hkew"
+BING_VERIFY = ""
 ROOT = Path(__file__).parent
 OG_IMAGE = "https://sda-services.ai/assets/brand/og-image.jpg"
 # Cache-busting: a short hash of the CSS and JS goes into every asset URL,
@@ -361,7 +364,7 @@ def head(r, path, title, meta, schema=None, demo=False, noindex=False):
     return f"""<title>{e(full_title)}</title>
 <meta name="description" content="{e(meta)}">
 <meta name="robots" content="{robots}">
-<meta name="theme-color" content="#F7F9F9">
+{f'<meta name="google-site-verification" content="{GOOGLE_VERIFY}">' + chr(10) if GOOGLE_VERIFY and path in ("", "index.html") else ""}{f'<meta name="msvalidate.01" content="{BING_VERIFY}">' + chr(10) if BING_VERIFY and path in ("", "index.html") else ""}<meta name="theme-color" content="#F7F9F9">
 <link rel="canonical" href="{url}">
 <link rel="alternate" hreflang="en" href="{url}">
 <link rel="alternate" hreflang="x-default" href="{url}">
