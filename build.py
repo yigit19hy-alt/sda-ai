@@ -20,7 +20,7 @@ ANALYTICS = False # set True once Cloudflare Web Analytics is switched on (adds 
 HOURS = "Monday to Friday, 9:00 to 17:00 (Dubai time, GST)"
 # Search engine ownership tags (meta tag method; the page must stay online for verification to remain valid)
 GOOGLE_VERIFY = "W83usJuTZkKzF4BUP-gteEH0HNXG2-AM-9VH7z4Hkew"
-BING_VERIFY = ""
+BING_VERIFY = "A49E1DBA8571BB0CC90A93CFF3947ACC"
 ROOT = Path(__file__).parent
 OG_IMAGE = "https://sda-services.ai/assets/brand/og-image.jpg"
 # Cache-busting: a short hash of the CSS and JS goes into every asset URL,
