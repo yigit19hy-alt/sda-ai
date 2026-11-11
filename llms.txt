@@ -2,7 +2,7 @@
 
 > Dubai-based AI agency (SDA SERVICES L.L.C-FZ, Meydan, Dubai, UAE). SDA stands for Software, Development, Applications & AI Services. We build AI agents, workflow automation, custom web and mobile apps, data management and SAP integration for companies in the UAE and GCC. Every project starts with a free pilot; prices are fixed, in AED, with no per-user fees. Languages: English and Arabic.
 
-Contact: hello@sda-ai.services · https://sda-services.ai/contact
+Contact: yigit@sda-services.ai · https://sda-services.ai/contact
 
 ## Services
 - [AI agents & assistants](https://sda-services.ai/services/ai-agents): Custom AI agents and chatbots for UAE businesses: answers from your documents, actions in your systems, on WhatsApp, web and voice. Free pilot.
@@ -26,6 +26,7 @@ Contact: hello@sda-ai.services · https://sda-services.ai/contact
 - [Energy & utilities](https://sda-services.ai/industries/energy): AI and mobile software for GCC energy and utility companies: field crews, asset data, inspections and maintenance plans connected to SAP and core systems.
 
 ## Regions
+- [Dubai](https://sda-services.ai/locations/dubai): Dubai AI agency for AI agents, workflow automation and custom software. Office in Meydan, Arabic and English, UAE hosting, free pilot project.
 - [Abu Dhabi](https://sda-services.ai/locations/abu-dhabi): AI agents, automation and custom software for companies in Abu Dhabi. UAE-based team, Arabic and English, UAE data protection, free pilot project.
 - [Saudi Arabia](https://sda-services.ai/locations/saudi-arabia): AI agents, automation and custom software for companies in Riyadh, Jeddah and Dammam. Arabic-first, PDPL-aware, hosting options in the Kingdom.
 - [Qatar](https://sda-services.ai/locations/qatar): AI agents, automation and custom software for companies in Doha and across Qatar. Arabic and English, Qatar data protection, free pilot project.
@@ -44,6 +45,15 @@ Contact: hello@sda-ai.services · https://sda-services.ai/contact
 - [Vendor management](https://sda-services.ai/use-cases/vendor-management): Try a vendor management demo: RFQs, AI quote comparison, 8D complaints, approvals and supplier documents in one place.
 - [Facility management](https://sda-services.ai/use-cases/facility-management): Try a facility management demo: maintenance tickets, technician app, sensor alerts and documents in one system for property teams.
 
+## Insights
+- [How much does an AI agent cost in the UAE?](https://sda-services.ai/insights/ai-agent-cost-uae): What AI agents, chatbots and automations cost in the UAE in 2026: typical prices in AED, what drives the price, running costs and how to start with a free pilot.
+- [How to choose an AI automation agency in Dubai](https://sda-services.ai/insights/choose-ai-automation-agency-dubai): Ten questions to ask before you hire an AI automation agency in Dubai: proof of working systems, data protection, integrations, pricing, ownership and support.
+- [WhatsApp AI chatbots for business in the UAE](https://sda-services.ai/insights/whatsapp-ai-chatbot-business-uae): How WhatsApp AI chatbots work for UAE businesses: the WhatsApp Business Platform, costs, Arabic support, what the bot can do and how to launch in weeks.
+- [AI agent vs chatbot: what is the difference?](https://sda-services.ai/insights/ai-agent-vs-chatbot): AI agent vs chatbot explained in plain English: what each can do, when a simple chatbot is enough, and when your business needs an AI agent that takes actions.
+- [AI and data protection in the GCC](https://sda-services.ai/insights/ai-data-protection-gcc): Data protection laws for AI projects in the UAE, DIFC, ADGM, Saudi Arabia, Qatar, Bahrain, Oman and Kuwait, and what they mean for chatbots and automation.
+- [AI invoice processing with SAP: how it works](https://sda-services.ai/insights/ai-invoice-processing-sap): How AI invoice processing works with SAP S/4HANA and other ERPs: reading invoices, matching purchase orders, posting, exception handling and typical timelines.
+
 ## Company
+- [About us](https://sda-services.ai/about): Who we are, how we work, where we work.
 - [Pricing](https://sda-services.ai/pricing): Free pilot project and unlimited revisions. Typical UAE prices in AED for AI agents, workflow automation, dashboards, web and mobile apps.
 - [Contact](https://sda-services.ai/contact): Talk to our Dubai team about your AI, automation, web or app project. We reply within one business day with first ideas and a free pilot proposal.

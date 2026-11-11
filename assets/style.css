@@ -1,6 +1,8 @@
 /* SDA AI Services — "Light & airy AI".
    Layout: bright white ground, slow teal/coral light clouds drifting behind frosted-glass layers.
    The AI shows up as light: a glowing prompt bar, soft halos, the four-point sparkle from the logo. */
+@font-face{font-family:"Geist";src:url("/assets/fonts/geist-latin.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Geist Mono";src:url("/assets/fonts/geist-mono-latin.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
 :root{
   color-scheme: light;
   --bg:#F8F7F5;
@@ -807,3 +809,40 @@ footer .logo-svg{height:46px}
   .price-extras div:hover{transform:translateY(-2px);box-shadow:inset 0 1px 0 #fff,var(--shadow-lg)}
 }
 @media (prefers-reduced-motion:reduce){.price-card:hover,.plan:hover,.price-extras div:hover{transform:none}}
+
+/* ---- SEO additions: kicker, articles, insights, contact details, WhatsApp ---- */
+.kicker{display:inline-flex;align-items:center;gap:8px;margin:0 0 22px;padding:7px 14px;border-radius:999px;font-size:14px;font-weight:500;color:var(--ink-2);background:rgba(255,255,255,.72);border:1px solid #fff;box-shadow:inset 0 1px 0 #fff, var(--shadow-sm)}
+.article{max-width:760px;margin:0 auto}
+.article .prose{max-width:none}
+.prose.legal{padding:36px 40px;border-radius:var(--r-lg)}
+@media (max-width:620px){.prose.legal{padding:24px 20px}}
+.prose h2{font-size:clamp(24px,2.6vw,30px);margin:44px 0 14px}
+.prose h3{font-size:20px;margin:30px 0 10px}
+.prose h2:first-child,.prose h3:first-child{margin-top:0}
+.prose ul,.prose ol{margin:14px 0 0;padding-left:1.3em}
+.prose li+li{margin-top:8px}
+.prose ul+p,.prose ol+p,.prose table+p{margin-top:18px}
+.prose a{color:var(--teal);text-underline-offset:3px}
+.prose table{width:100%;border-collapse:collapse;margin-top:18px;font-size:16px}
+.prose th,.prose td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.prose th{font-weight:600;color:var(--ink)}
+.prose .tbl{overflow-x:auto}
+.post-meta{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px;font-size:14px;color:var(--dim)}
+.key-take{margin:0 0 36px;padding:24px 28px;border-radius:var(--r-md)}
+.key-take b{display:block;margin-bottom:8px}
+.key-take ul{margin:0;padding-left:1.2em;color:var(--ink-2)}
+.key-take li+li{margin-top:6px}
+.posts{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media (max-width:800px){.posts{grid-template-columns:1fr}}
+.posts a{display:flex;flex-direction:column;gap:8px;padding:26px;border-radius:var(--r-md);text-decoration:none;transition:transform .3s var(--ease-out), box-shadow .3s var(--ease-out)}
+.posts a:hover{transform:translateY(-2px);box-shadow:inset 0 1px 0 #fff, var(--shadow-lg)}
+.posts small{font-size:13px;color:var(--dim)}
+.posts b{font-size:19px;font-weight:600;letter-spacing:-.015em;color:var(--ink)}
+.posts span{font-size:15px;color:var(--dim)}
+.info-list{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:14px;font-size:16px;color:var(--ink-2)}
+.info-list b{display:block;font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--dim);margin-bottom:2px}
+.info-list a{color:var(--ink-2)}
+.btn-wa{background:#1FA855;color:#fff;border-color:#1FA855}
+.btn-wa:hover{background:#178C46}
+.foot-social{display:flex;gap:12px;flex-wrap:wrap}
+.kicker .sp{width:12px;height:12px;top:0;margin:0}

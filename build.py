@@ -9,9 +9,17 @@ import json, shutil, html, re, posixpath, datetime
 from pathlib import Path
 
 SITE_URL = "https://sda-services.ai"      # Live domain (Cloudflare Pages custom domain).
-EMAIL = "hello@sda-ai.services"            # TODO: your real email
+EMAIL = "yigit@sda-services.ai"
 BRAND = "SDA AI Services"
+# Fill these in when ready. Empty values are simply left out of the pages and the structured data.
+PHONE = ""        # e.g. "+971 50 123 4567" (shown as click-to-call and in the schema)
+WHATSAPP = ""     # digits only incl. country code, e.g. "971501234567" (adds WhatsApp buttons)
+SOCIAL = []       # profile URLs, e.g. ["https://www.linkedin.com/company/sda-ai-services"] (schema sameAs + footer)
+LICENSE_NO = ""   # trade licence number, shown in the legal notice
+ANALYTICS = False # set True once Cloudflare Web Analytics is switched on (adds the note to the privacy policy)
+HOURS = "Monday to Friday, 9:00 to 17:00 (Dubai time, GST)"
 ROOT = Path(__file__).parent
+OG_IMAGE = "https://sda-services.ai/assets/brand/og-image.jpg"
 # Cache-busting: a short hash of the CSS and JS goes into every asset URL,
 # so browsers fetch new files right after each deploy.
 import hashlib as _hl
@@ -19,6 +27,9 @@ ASSET_V = _hl.sha1(b"".join(p.read_bytes() for p in sorted([*(ROOT / "src" / "as
 OUT = ROOT / "site"
 
 e = html.escape
+def lc(t):
+    """Lower-case the first letter for use mid-sentence, but keep acronyms such as AI, HR or SAP."""
+    return t if len(t) > 1 and t[1].isupper() else t[:1].lower() + t[1:]
 
 # --------------------------------------------------------------------------
 # Content
@@ -202,6 +213,9 @@ for _slug in DEMO_ORDER:
 _lp_spec = _ilu.spec_from_file_location("landing", ROOT / "src" / "landing.py")
 _LP = _ilu.module_from_spec(_lp_spec); _lp_spec.loader.exec_module(_LP)
 LANDING, HUBS = _LP.PAGES, _LP.HUBS
+_in_spec = _ilu.spec_from_file_location("insights", ROOT / "src" / "insights.py")
+_IN = _ilu.module_from_spec(_in_spec); _in_spec.loader.exec_module(_IN)
+POSTS = sorted(_IN.POSTS, key=lambda x: x["date"], reverse=True)
 LP_BY_KIND = {k: [x for x in LANDING if x["kind"] == k] for k in HUBS}
 IND_ICON = lambda d: f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{d}</svg>'
 INDUSTRIES = [
@@ -343,38 +357,35 @@ def head(r, path, title, meta, schema=None, demo=False, noindex=False):
     ld = ""
     for s in (schema or []):
         ld += '<script type="application/ld+json">' + json.dumps(s, ensure_ascii=False) + "</script>\n"
+    og_type = "article" if path.startswith("insights/") and not path.endswith("index.html") else "website"
     return f"""<title>{e(full_title)}</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="{e(meta)}">
 <meta name="robots" content="{robots}">
 <meta name="theme-color" content="#F7F9F9">
 <link rel="canonical" href="{url}">
 <link rel="alternate" hreflang="en" href="{url}">
 <link rel="alternate" hreflang="x-default" href="{url}">
-<meta name="geo.region" content="AE-DU">
-<meta name="geo.placename" content="Dubai">
-<meta property="og:type" content="website">
+<meta property="og:type" content="{og_type}">
 <meta property="og:locale" content="en_AE">
 <meta property="og:site_name" content="{BRAND}">
 <meta property="og:title" content="{e(full_title)}">
 <meta property="og:description" content="{e(meta)}">
 <meta property="og:url" content="{url}">
-<meta property="og:image" content="{SITE_URL}/assets/brand/og-image.png">
+<meta property="og:image" content="{OG_IMAGE}">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="{BRAND}: AI agents, automation and custom software from Dubai">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{e(full_title)}">
 <meta name="twitter:description" content="{e(meta)}">
-<meta name="twitter:image" content="{SITE_URL}/assets/brand/og-image.png">
-<link rel="icon" href="{r}assets/brand/logo-mark.svg" type="image/svg+xml">
-<link rel="icon" href="{r}assets/brand/favicon-32.png" sizes="32x32" type="image/png">
-<link rel="apple-touch-icon" href="{r}assets/brand/apple-touch-icon.png">
-<link rel="manifest" href="{r}site.webmanifest">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="{r}assets/style.css?v={ASSET_V}">{chr(10) + f'<link rel="stylesheet" href="{r}assets/demos.css?v={ASSET_V}">' if demo else ""}
+<meta name="twitter:image" content="{OG_IMAGE}">
+<link rel="icon" href="/assets/brand/logo-mark.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/brand/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preload" href="/assets/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/style.css?v={ASSET_V}">{chr(10) + f'<link rel="stylesheet" href="/assets/demos.css?v={ASSET_V}">' if demo else ""}
 {ld}"""
 
 BURGER = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6.5h14M3 13.5h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>'
@@ -394,7 +405,7 @@ def nav(r, active):
       <li class="has-drop"><a href="{r}services/index.html"{cur("services")}>Services <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a><ul class="drop mega glass-strong">{drop}</ul></li>
       <li><a href="{r}use-cases/index.html"{cur("use-cases")}><i class="pulse-dot" aria-hidden="true"></i>Live demos</a></li>
       <li><a href="{r}pricing.html"{cur("pricing")}>Pricing</a></li>
-      <li><a href="{r}index.html#process">Process</a></li>
+      <li><a href="{r}insights/index.html"{cur("insights")}>Insights</a></li>
       <li><a href="{r}contact.html"{cur("contact")}>Contact</a></li>
       <li class="m-cta"><a class="btn btn-primary" href="{r}contact.html">Start a project <span class="arr">→</span></a></li>
     </ul>
@@ -409,21 +420,25 @@ def footer(r, demo=False):
     svc = "".join(f'<li><a href="{r}services/{s["slug"]}.html">{e(s["name"])}</a></li>' for s in SERVICES)
     svc += "".join(f'<li><a href="{r}solutions/{x["slug"]}.html">{e(x["name"])}</a></li>' for x in LP_BY_KIND["solutions"])
     inds = "".join(f'<li><a href="{r}industries/{i["slug"]}.html">{e(i["name"])}</a></li>' for i in INDUSTRIES)
-    regs = f'<li><a href="{r}index.html">Dubai</a></li>' + "".join(f'<li><a href="{r}locations/{x["slug"]}.html">{e(x["name"])}</a></li>' for x in LP_BY_KIND["locations"])
-    demo_js = f'\n<script src="{r}assets/demos.js?v={ASSET_V}"></script>' if demo else ""
+    regs = "".join(f'<li><a href="{r}locations/{x["slug"]}.html">{e(x["name"])}</a></li>' for x in LP_BY_KIND["locations"])
+    demo_js = f'\n<script src="/assets/demos.js?v={ASSET_V}"></script>' if demo else ""
+    contact_li = f'<li><a href="mailto:{EMAIL}">{EMAIL}</a></li>'
+    if PHONE: contact_li += f'<li><a href="tel:{PHONE.replace(" ", "")}">{e(PHONE)}</a></li>'
+    if WHATSAPP: contact_li += f'<li><a href="https://wa.me/{WHATSAPP}" rel="noopener">WhatsApp</a></li>'
+    social = "".join(f'<li><a href="{u}" rel="noopener me">{e(_social_name(u))}</a></li>' for u in SOCIAL)
     return f"""<footer>
   <div class="wrap">
     <div class="foot glass">
-      <div>{logo(r)}<p>AI software, web and app development for companies that want working systems in production. Based in Dubai, serving clients across the UAE and GCC.</p></div>
+      <div>{logo(r)}<p>AI software, web and app development for companies that want working systems in production. Based in Dubai, serving clients across the UAE and GCC.</p><p class="note">SDA SERVICES L.L.C-FZ · Meydan Grandstand, 6th floor, Meydan Road, Nad Al Sheba, Dubai, UAE</p></div>
       <div><h4>Services</h4><ul>{svc}</ul></div>
       <div><h4>Industries</h4><ul>{inds}</ul></div>
       <div><h4>Regions</h4><ul>{regs}</ul></div>
-      <div><h4>Company</h4><ul><li><a href="{r}pricing.html">Pricing</a></li><li><a href="{r}index.html#process">Process</a></li><li><a href="{r}index.html#stack">Technology</a></li><li><a href="{r}contact.html">Contact</a></li><li>{EMAIL}</li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="{r}about.html">About us</a></li><li><a href="{r}insights/index.html">Insights</a></li><li><a href="{r}pricing.html">Pricing</a></li><li><a href="{r}index.html#process">Process</a></li><li><a href="{r}contact.html">Contact</a></li>{contact_li}{social}</ul></div>
     </div>
     <div class="foot-base"><span>© <span id="yr">2026</span> {BRAND}</span><span><a href="{r}privacy.html">Privacy policy</a> · <a href="{r}legal-notice.html">Legal notice</a></span></div>
   </div>
 </footer>
-<script src="{r}assets/main.js?v={ASSET_V}"></script>{demo_js}"""
+<script src="/assets/main.js?v={ASSET_V}"></script>{demo_js}"""
 
 def cta_band(r, h="Ready to put AI to work?", p="Tell us about your process. We reply within one business day with first ideas and a proposed next step."):
     return f"""<section class="block" style="padding-top:0"><div class="wrap"><div class="cta-card glass-strong"><h2>{h}</h2><p>{p}</p>
@@ -438,18 +453,29 @@ def crumb_ld(items):
     return {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
         {"@type": "ListItem", "position": i + 1, "name": n, "item": abs_url(p or "")} for i, (n, p) in enumerate(items)]}
 
+def _social_name(u):
+    for k, n in (("linkedin", "LinkedIn"), ("instagram", "Instagram"), ("x.com", "X"), ("twitter", "X"), ("facebook", "Facebook"), ("youtube", "YouTube"), ("tiktok", "TikTok")):
+        if k in u: return n
+    return u.split("//")[-1].split("/")[0]
+
 ORG_ID = SITE_URL + "/#organization"
 ORG_LD = {"@context": "https://schema.org", "@type": "ProfessionalService", "@id": ORG_ID, "name": BRAND,
-          "alternateName": ["SDA", "Software, Development, Applications & AI Services", "SDA SERVICES L.L.C-FZ"],
+          "alternateName": ["Software, Development, Applications & AI Services", "SDA SERVICES L.L.C-FZ"],
           "legalName": "SDA SERVICES L.L.C-FZ",
           "url": SITE_URL + "/", "email": EMAIL,
-          "logo": SITE_URL + "/assets/brand/logo.png", "image": SITE_URL + "/assets/brand/og-image.png",
+          "logo": {"@type": "ImageObject", "url": SITE_URL + "/assets/brand/logo.png"}, "image": OG_IMAGE,
           "description": "Dubai-based AI agency: AI agents, workflow automation, custom web and mobile apps, data management and SAP integration for companies in the UAE and GCC.",
           "address": {"@type": "PostalAddress", "streetAddress": "Meydan Grandstand, 6th floor, Meydan Road, Nad Al Sheba",
                       "addressLocality": "Dubai", "addressRegion": "Dubai", "addressCountry": "AE"},
+          "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "09:00", "closes": "17:00"}],
+          "contactPoint": [{"@type": "ContactPoint", "contactType": "sales", "email": EMAIL, "areaServed": ["AE", "SA", "QA", "KW", "BH", "OM"], "availableLanguage": ["English", "Arabic"]}],
           "areaServed": [{"@type": "Country", "name": c} for c in GCC],
           "knowsLanguage": ["en", "ar"], "priceRange": "AED 10,900+",
           "knowsAbout": ["AI agents", "Workflow automation", "Custom web applications", "Mobile apps", "Data management", "SAP integration"]}
+if PHONE:
+    ORG_LD["telephone"] = PHONE; ORG_LD["contactPoint"][0]["telephone"] = PHONE
+if SOCIAL:
+    ORG_LD["sameAs"] = SOCIAL
 WEBSITE_LD = {"@context": "https://schema.org", "@type": "WebSite", "@id": SITE_URL + "/#website", "name": BRAND, "url": SITE_URL + "/",
               "inLanguage": "en", "publisher": {"@id": ORG_ID}}
 
@@ -484,14 +510,14 @@ def bento(r):
         out.append(f"""<a class="tile glass {cls}" href="{r}services/{s['slug']}.html">
   <div class="tile-vis">{VIS[s['slug']]}</div>
   <h3>{e(s['name'])}</h3><p>{e(s['short'])}</p>
-  <span class="link">Learn more <span class="arr">→</span></span></a>""")
+  <span class="link">Explore {e(lc(s['name']))} <span class="arr">→</span></span></a>""")
     return '<div class="bento">' + "".join(out) + "</div>"
 
 def svc_card(r, s, i):
     return f"""<a class="tile glass" href="{r}services/{s['slug']}.html">
   <div class="tile-vis">{VIS[s['slug']]}</div>
   <h3>{e(s['name'])}</h3><p>{e(s['short'])}</p>
-  <span class="link">Learn more <span class="arr">→</span></span></a>"""
+  <span class="link">Explore {e(lc(s['name']))} <span class="arr">→</span></span></a>"""
 
 
 def uc_switch(r):
@@ -499,7 +525,7 @@ def uc_switch(r):
     panels = ""
     for i, u in enumerate(USE_CASES):
         panels += f"""<div class="uc-panel" role="tabpanel" id="ucp-{u['slug']}" aria-labelledby="uct-{u['slug']}"{"" if i == 0 else " hidden"}>
-  <div class="uc-copy"><div><h3>{e(u['name'])}</h3><p>{e(u['lede'])}</p></div><a class="btn btn-glass btn-sm" href="{r}use-cases/{u['slug']}.html">Open full page <span class="arr">→</span></a></div>
+  <div class="uc-copy"><div><h3>{e(u['name'])}</h3><p>{e(u['lede'])}</p></div><a class="btn btn-glass btn-sm" href="{r}use-cases/{u['slug']}.html">Open the {e(lc(u['name']))} demo <span class="arr">→</span></a></div>
   {DEMOS[u['slug']]()}
 </div>"""
     return f'<div class="uc-switch"><div class="uc-tabs glass-strong" role="tablist" aria-label="Live demos">{tabs}</div>{panels}</div>'
@@ -517,11 +543,18 @@ PROCESS = """<div class="steps">
 
 def contact_block(heading_tag="h2"):
     opts = "".join(f"<option>{e(s['name'])}</option>" for s in SERVICES) + "<option>Not sure yet</option>"
+    wa = f'<a class="btn btn-wa btn-sm" href="https://wa.me/{WHATSAPP}" rel="noopener">Chat on WhatsApp</a>' if WHATSAPP else ""
+    tel = f'\n      <li><b>Phone</b><a href="tel:{PHONE.replace(" ", "")}">{e(PHONE)}</a></li>' if PHONE else ""
     return f"""<div class="contact">
   <div class="contact-copy">
     <{heading_tag}>Have a process that <em>should</em> run itself?</{heading_tag}>
     <p>Tell us what you want to automate or build. We reply within one business day with first ideas and a proposed next step.</p>
-    <div class="mail"><code id="mail">{EMAIL}</code><button class="btn btn-glass btn-sm" id="copy" type="button">Copy email</button></div>
+    <div class="mail"><code id="mail">{EMAIL}</code><button class="btn btn-glass btn-sm" id="copy" type="button">Copy email</button>{wa}</div>
+    <ul class="info-list">
+      <li><b>Office</b>SDA SERVICES L.L.C-FZ, Meydan Grandstand, 6th floor, Meydan Road, Nad Al Sheba, Dubai, UAE</li>
+      <li><b>Hours</b>{HOURS}</li>
+      <li><b>Response time</b>Within one business day, with first ideas and a proposed next step</li>{tel}
+    </ul>
   </div>
   <form class="lead glass-strong" method="POST" action="/api/contact" novalidate data-mail="{EMAIL}">
     <p hidden><label>Leave this empty<input name="company-website" tabindex="-1" autocomplete="off"></label></p>
@@ -536,6 +569,17 @@ def contact_block(heading_tag="h2"):
     <p class="note" id="note" role="status">We use your details only to reply to this request.</p>
   </form>
 </div>"""
+
+def related_reading(r, slugs):
+    """Links to insights articles whose topics match any of the given page slugs."""
+    hits = [x for x in POSTS if set(x["topics"]) & set(slugs)][:3]
+    if not hits:
+        return ""
+    cards = "".join(f'<a class="glass" href="{r}insights/{x["slug"]}.html"><small>Guide</small><b>{e(x["h1"])}</b><span>{e(x["lede"])}</span></a>' for x in hits)
+    return f"""<section class="block" style="padding-top:0"><div class="wrap">
+  <div class="sec-head left" style="margin-bottom:28px"><h2>Related reading</h2><p>Practical guides from our <a class="link" href="{r}insights/index.html">insights</a>.</p></div>
+  <div class="posts">{cards}</div>
+</div></section>"""
 
 def page(r, path, title, meta, active, body, schema=None, demo=False, noindex=False):
     return head(r, path, title, meta, schema, demo, noindex) + nav(r, active) + f'\n<main id="main">\n{body}\n</main>\n' + footer(r, demo)
@@ -577,6 +621,7 @@ def home():
     chips = "".join(f'<button type="button" data-i="{i}">{e(p["q"])}</button>' for i, p in enumerate(PROMPTS))
     pdata = json.dumps([dict(q=p["q"], title=p["title"], steps=p["steps"], time=p["time"], slug=p["slug"], svc=SVC[p["slug"]]["name"]) for p in PROMPTS])
     body = f"""<header class="hero"><div class="wrap">
+  <p class="kicker rise">{SP}AI agency in Dubai for the UAE &amp; GCC</p>
   <h1 class="rise">AI that works the way your <span class="soft">team</span> does{SPG()}</h1>
   <p class="lede rise d1">From Dubai, SDA AI Services designs, builds and runs <b>AI agents, automation and custom software</b> for companies across the UAE and GCC that want working systems in production, not slide decks.</p>
   <div class="cta-row rise d2"><a class="btn btn-primary" href="contact.html">Book a discovery call <span class="arr">→</span></a><a class="btn btn-glass" href="use-cases/index.html">Try the live demos</a></div>
@@ -592,7 +637,7 @@ def home():
   </div>
 </div></header>
 
-<section class="video-sec" aria-label="Video: our services in 35 seconds"><div class="wrap"><figure class="video-wide"><video src="assets/media/sda-ai-services.mp4" poster="assets/media/sda-ai-services.jpg" width="1920" height="1080" muted loop playsinline autoplay controls preload="metadata" aria-label="Video: our services in 35 seconds"></video><figcaption><i class="pulse-dot" aria-hidden="true"></i>Our services in 35 seconds</figcaption></figure></div></section>
+<section class="video-sec" aria-label="Video: our services in 35 seconds"><div class="wrap"><figure class="video-wide"><video src="/assets/media/sda-ai-services.mp4" poster="/assets/media/sda-ai-services.jpg" width="1920" height="1080" muted loop playsinline autoplay controls preload="metadata" aria-label="Video: our services in 35 seconds"></video><figcaption><i class="pulse-dot" aria-hidden="true"></i>Our services in 35 seconds</figcaption></figure></div></section>
 
 <section class="block" id="services"><div class="wrap">
   <div class="sec-head"><h2>Six ways we put AI to work</h2><p>Each engagement goes from first prototype to production code, with the integrations, security and monitoring an operations team needs.</p></div>
@@ -612,7 +657,7 @@ def home():
 </div></section>
 
 <section class="block" id="stack" style="padding-top:20px"><div class="wrap">
-  <div class="sec-head"><h2>Built to last, not just to demo</h2><p>We pick models and infrastructure by cost, accuracy and data-protection needs, and we build so your team can run it.</p></div>
+  <div class="sec-head"><h2>Built to last, not just to demo</h2><p>We pick models and infrastructure by cost, accuracy and data-protection needs, and we build so your team can run it. <a class="link" href="about.html">More about us <span class="arr">→</span></a></p></div>
   <div class="trust">
     <div class="princ glass">
       <div><span class="pi">{_I('<path d="M12 3 4 6v6c0 4.4 3.4 8.3 8 9 4.6-.7 8-4.6 8-9V6z"/>')}</span><h3>Enterprise experience</h3><p>Our team has delivered large enterprise projects, so we plan for security, compliance and change management from day one.</p></div>
@@ -626,7 +671,11 @@ def home():
 </div></section>
 
 <section class="block" id="contact" style="padding-top:20px"><div class="wrap">{contact_block()}</div></section>"""
-    return page(r, "", *SEO["home"], "home", body, [ORG_LD, WEBSITE_LD], demo=True)
+    video_ld = {"@context": "https://schema.org", "@type": "VideoObject", "name": "SDA AI Services in 35 seconds",
+                "description": "AI agents, workflow automation and custom software for companies in the UAE and GCC, built by SDA AI Services in Dubai.",
+                "thumbnailUrl": SITE_URL + "/assets/media/sda-ai-services.jpg", "contentUrl": SITE_URL + "/assets/media/sda-ai-services.mp4",
+                "uploadDate": "2026-11-10", "duration": "PT35S", "inLanguage": "en", "publisher": {"@id": ORG_ID}}
+    return page(r, "", *SEO["home"], "home", body, [ORG_LD, WEBSITE_LD, video_ld], demo=True)
 
 def services_hub():
     r = "../"
@@ -688,6 +737,7 @@ def service_page(s):
   <div class="sec-head left" style="margin-bottom:28px"><h2>Often combined with</h2></div>
   <div class="related">{rel}</div>
 </div></section>
+{related_reading(r, [s['slug']])}
 {cta_band(r, f"Ready to talk about {e(s['name'])}?")}"""
     ld = [crumb_ld([("Home", ""), ("Services", "services/"), (s["name"], path)]),
           {"@context": "https://schema.org", "@type": "Service", "name": s["title"], "serviceType": s["name"], "description": SEO[s["slug"]][1],
@@ -787,7 +837,7 @@ def pricing():
         hl = " hl" if slug == "ai-agents" else ""
         pr = f'<div class="price"><small>from</small><b>AED {price}</b></div>' if price else '<div class="price"><b class="req">On request</b></div>'
         f = "".join(f"<li>{CHECK}<span>{e(x)}</span></li>" for x in feats)
-        cards += f"""<article class="price-card glass{hl}"><span class="d-ic" aria-hidden="true">{ICONS[sv['icon']]}</span><h3>{e(sv['name'])}</h3>{pr}<p class="unit">{e(unit)}</p><ul>{f}</ul><a class="link" href="{r}services/{slug}.html">Learn more<span class="vh">: {e(sv['name'])}</span> <span class="arr">→</span></a></article>"""
+        cards += f"""<article class="price-card glass{hl}"><span class="d-ic" aria-hidden="true">{ICONS[sv['icon']]}</span><h3>{e(sv['name'])}</h3>{pr}<p class="unit">{e(unit)}</p><ul>{f}</ul><a class="link" href="{r}services/{slug}.html">More on {e(lc(sv['name']))} <span class="arr">→</span></a></article>"""
     plans = ""
     for name, forr, price, badge, feats, star in PLANS:
         f = "".join(f"<li>{CHECK}<span>{e(x)}</span></li>" for x in feats)
@@ -844,6 +894,9 @@ def lp_page(p):
     svcs = "".join(f'<a class="glass" href="{r}services/{k}.html"><b>{e(SVC[k]["name"])}</b><span>{e(SVC[k]["short"])}</span></a>' for k in p["services"])
     faq = "".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in p["faq"])
     others = "".join(f'<a href="{r}{kind}/{x["slug"]}.html">{e(x["name"])}</a>' for x in LP_BY_KIND[kind] if x["slug"] != p["slug"])
+    typ_h = f"Typical AI projects in {p['city']}" if kind == "locations" else f"Typical {lc(p['name'])} projects" if kind == "industries" else "Typical projects"
+    svc_h = f"AI services for companies in {p['name']}" if kind == "locations" else "Services behind it"
+    reading = related_reading(r, [p["slug"]] + p["services"])
     body = page_hero(r, items, e(p["h1"]), e(p["lede"]), extra, f'<dl class="facts glass-strong">{facts}</dl>') + f"""
 <section class="block" style="padding-top:48px"><div class="wrap two">
   <h2>{e(p['intro_h'])}</h2>
@@ -856,7 +909,7 @@ def lp_page(p):
 </div></section>
 
 <section class="block" style="padding-top:0"><div class="wrap two">
-  <div><h2>Typical projects</h2><p class="intro">Examples of where AI pays off first.</p></div>
+  <div><h2>{e(typ_h)}</h2><p class="intro">Examples of where AI pays off first.</p></div>
   <ul class="ex-list glass">{ex}</ul>
 </div></section>
 
@@ -866,7 +919,7 @@ def lp_page(p):
 </div></section>
 
 <section class="block" style="padding-top:0"><div class="wrap">
-  <div class="sec-head left" style="margin-bottom:28px"><h2>Services behind it</h2></div>
+  <div class="sec-head left" style="margin-bottom:28px"><h2>{e(svc_h)}</h2></div>
   <div class="related">{svcs}</div>
 </div></section>
 
@@ -875,13 +928,15 @@ def lp_page(p):
   <div class="faq glass">{faq}</div>
 </div></section>
 
+{reading}
 <section class="block" style="padding-top:0"><div class="wrap">
   <p class="note lp-more"><b>More {e(hub['name'].lower())}:</b> {others}</p>
 </div></section>
 {cta_band(r, e(p['cta']), "Tell us about your process. We reply within one business day and propose a free pilot you can test with your own examples.")}"""
     area = [{"@type": "Country", "name": p["country"]}] if kind == "locations" else [{"@type": "Country", "name": c} for c in GCC]
     svc_ld = {"@context": "https://schema.org", "@type": "Service", "name": p["h1"], "description": p["meta"], "url": abs_url(path),
-              "provider": {"@id": ORG_ID}, "areaServed": area, "serviceType": p["name"]}
+              "provider": {"@id": ORG_ID}, "areaServed": area,
+              "serviceType": {"locations": "AI development and automation", "industries": f"AI solutions for {p['name'].lower()}", "solutions": p["name"]}[kind]}
     if kind == "industries":
         svc_ld["audience"] = {"@type": "BusinessAudience", "audienceType": p["name"]}
     ld = [crumb_ld([("Home", ""), (hub["name"], f"{kind}/"), (p["name"], path)]), svc_ld,
@@ -893,24 +948,160 @@ def lp_hub(kind):
     r = "../"
     hub = HUBS[kind]
     cards = "".join(f'<a class="glass" href="{r}{kind}/{x["slug"]}.html"><b>{e(x["h1"])}</b><span>{e(x["meta"])}</span></a>' for x in LP_BY_KIND[kind])
-    extra = ""
-    if kind == "locations":
-        extra = f'<p class="note" style="margin-top:22px">Based in Dubai? Start on our <a class="link" href="{r}index.html">homepage</a> or see all <a class="link" href="{r}services/index.html">services</a>.</p>'
+    extra = f'<p class="note" style="margin-top:22px">Looking for a specific service? See all <a class="link" href="{r}services/index.html">AI development services</a> or <a class="link" href="{r}pricing.html">typical prices</a>.</p>'
+    faq = "".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in hub.get("faq", []))
+    intro = f"""<section class="block" style="padding-top:0"><div class="wrap two">
+  <h2>{e(hub['intro_h'])}</h2>
+  <div class="prose">{''.join(f'<p>{e(x)}</p>' for x in hub['intro'])}</div>
+</div></section>""" if hub.get("intro") else ""
+    faq_sec = f"""<section class="block" style="padding-top:0"><div class="wrap two">
+  <h2>Common questions</h2>
+  <div class="faq glass">{faq}</div>
+</div></section>""" if faq else ""
     body = page_hero(r, [("Home", "index.html"), (hub["name"], None)], e(hub["h1"]), e(hub["lede"])) + f"""
 <section class="block" style="padding-top:20px"><div class="wrap"><div class="related">{cards}</div>{extra}</div></section>
+{intro}
 <section class="block" style="padding-top:0"><div class="wrap">
   <div class="sec-head"><h2>How a project runs</h2><p>Working software at every checkpoint, starting with a free pilot.</p></div>{PROCESS}
 </div></section>
+{faq_sec}
 {cta_band(r)}"""
     ld = [crumb_ld([("Home", ""), (hub["name"], f"{kind}/")]),
           {"@context": "https://schema.org", "@type": "ItemList", "itemListElement": [
               {"@type": "ListItem", "position": i + 1, "url": abs_url(f"{kind}/{x['slug']}.html"), "name": x["h1"]} for i, x in enumerate(LP_BY_KIND[kind])]}]
+    if hub.get("faq"):
+        ld.append({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in hub["faq"]]})
     return page(r, f"{kind}/", hub["title"], hub["meta"], "services", body, ld)
+
+ABOUT_FAQ = [
+  ("Where is SDA AI Services based?", "Our office is at Meydan Grandstand, 6th floor, Meydan Road, Nad Al Sheba, Dubai, United Arab Emirates. We work with companies across the UAE and the GCC."),
+  ("What does SDA stand for?", "SDA stands for Software, Development, Applications & AI Services. The legal entity is SDA SERVICES L.L.C-FZ."),
+  ("Which languages do you work in?", "English and Arabic, including right-to-left interfaces and Arabic AI assistants."),
+  ("How do projects start?", "With a free 30-minute discovery call and a free pilot for one use case. You only pay once you decide to go ahead."),
+]
+
+def about():
+    r = ""
+    items = [("Home", "index.html"), ("About us", None)]
+    side = """<dl class="facts glass-strong"><div><dt>Company</dt><dd>SDA SERVICES L.L.C-FZ</dd></div><div><dt>Office</dt><dd>Meydan, Dubai, UAE</dd></div><div><dt>Experience</dt><dd>10+ years in enterprise software</dd></div><div><dt>Projects</dt><dd>25+ delivered</dd></div><div><dt>Languages</dt><dd>English and Arabic</dd></div></dl>"""
+    extra = f'<div class="cta-row"><a class="btn btn-primary" href="{r}contact.html">Book a discovery call <span class="arr">→</span></a><a class="btn btn-glass" href="{r}use-cases/index.html">Try the live demos</a></div>'
+    faq = "".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in ABOUT_FAQ)
+    body = page_hero(r, items, "About SDA AI Services", "We are a Dubai-based AI agency. We design, build and run AI agents, automation and custom software for companies in the UAE and GCC that want systems in production, not slide decks.", extra, side) + f"""
+<section class="block" style="padding-top:48px"><div class="wrap two">
+  <h2>Who we are</h2>
+  <div class="prose"><p>SDA stands for <b>Software, Development, Applications &amp; AI Services</b>. Behind the name is a team with more than ten years of experience in enterprise software, including large SAP projects for international companies, and more than 25 delivered projects.</p>
+  <p>That background shapes how we build AI. We think about security, compliance, integration and change management from the first day, because we know what it takes for software to run in a real company, with real users and real data. Today we focus entirely on AI: agents and assistants, workflow automation, custom web and mobile apps, data and dashboards, and integration with SAP and other core systems.</p></div>
+</div></section>
+
+<section class="block" style="padding-top:0"><div class="wrap">
+  <div class="sec-head"><h2>How we work</h2><p>Six promises that apply to every project.</p></div>
+  <div class="deliv">
+    <div class="glass"><h3>{SP}Free pilot first</h3><p>You see working software on your own examples before you pay anything. If it does not convince you, you walk away at no cost.</p></div>
+    <div class="glass"><h3>{SP}Fixed prices in AED</h3><p>After the pilot you get a binding fixed price. No per-user fees, so your whole team can use what we build.</p></div>
+    <div class="glass"><h3>{SP}Unlimited revisions</h3><p>We refine designs, screens and features within the agreed scope until you approve them.</p></div>
+    <div class="glass"><h3>{SP}Measured results</h3><p>Every project starts with a metric, such as hours saved or response time, and we report against it.</p></div>
+    <div class="glass"><h3>{SP}Your data stays yours</h3><p>Hosting in the environment you choose, in the UAE or your own cloud, and no training on your data without consent.</p></div>
+    <div class="glass"><h3>{SP}Built to hand over</h3><p>Clean code, documentation and training, so your team can own and extend what we build.</p></div>
+  </div>
+</div></section>
+
+<section class="block" style="padding-top:0"><div class="wrap">
+  <div class="sec-head"><h2>From idea to production in five steps</h2><p>Short cycles and working software at every checkpoint.</p></div>{PROCESS}
+</div></section>
+
+<section class="block" style="padding-top:0"><div class="wrap two">
+  <div><h2>Where we work</h2><p class="intro">From our office in Dubai we serve companies across the Gulf, remotely and on site when a project needs it.</p></div>
+  <ul class="ex-list glass">{"".join(f'<li><b><a href="{r}locations/{x["slug"]}.html">{e(x["name"])}</a></b><span>{e(x["meta"])}</span></li>' for x in LP_BY_KIND["locations"])}</ul>
+</div></section>
+
+<section class="block" style="padding-top:0"><div class="wrap two">
+  <h2>Common questions</h2>
+  <div class="faq glass">{faq}</div>
+</div></section>
+{cta_band(r, "Let's see what AI can do for your team")}"""
+    ld = [ORG_LD, crumb_ld([("Home", ""), ("About us", "about.html")]),
+          {"@context": "https://schema.org", "@type": "AboutPage", "name": "About SDA AI Services", "url": abs_url("about.html"), "about": {"@id": ORG_ID}, "mainEntity": {"@id": ORG_ID}},
+          {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+              {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in ABOUT_FAQ]}]
+    return page(r, "about.html", "About SDA AI Services | AI Agency in Dubai, UAE",
+                "SDA AI Services is a Dubai-based AI agency (SDA SERVICES L.L.C-FZ) with 10+ years of enterprise software experience. Free pilot, fixed prices, English and Arabic.",
+                "about", body, ld)
+
+def _fmt_date(d):
+    return datetime.date.fromisoformat(d).strftime("%-d %B %Y")
+
+def _read_min(post):
+    words = len(re.sub(r"<[^>]+>", " ", post["body"]).split()) + sum(len((q + " " + a).split()) for q, a in post["faq"])
+    return max(3, round(words / 220))
+
+def insights_hub():
+    r = "../"
+    cards = "".join(f'<a class="glass" href="{r}insights/{x["slug"]}.html"><small>{_fmt_date(x["date"])} · {_read_min(x)} min read</small><b>{e(x["h1"])}</b><span>{e(x["lede"])}</span></a>' for x in POSTS)
+    body = page_hero(r, [("Home", "index.html"), ("Insights", None)], "Insights on AI for UAE and GCC companies",
+                     "Practical guides on AI agents, automation, costs and data protection, written for decision makers in the UAE and GCC. No hype, just what you need to plan a project.") + f"""
+<section class="block" style="padding-top:20px"><div class="wrap"><div class="posts">{cards}</div></div></section>
+{cta_band(r, "Have a question we have not answered?", "Tell us about your process. We reply within one business day with first ideas and a proposed next step.")}"""
+    ld = [crumb_ld([("Home", ""), ("Insights", "insights/")]),
+          {"@context": "https://schema.org", "@type": "Blog", "@id": SITE_URL + "/insights/#blog", "name": f"{BRAND} Insights", "url": abs_url("insights/"),
+           "inLanguage": "en", "publisher": {"@id": ORG_ID},
+           "blogPost": [{"@type": "BlogPosting", "headline": x["h1"], "url": abs_url(f"insights/{x['slug']}.html"), "datePublished": x["date"]} for x in POSTS]}]
+    return page(r, "insights/", "AI Insights for UAE & GCC Companies | SDA AI Services",
+                "Guides on AI agents, WhatsApp chatbots, invoice automation, AI costs in AED and data protection in the UAE and GCC, from a Dubai AI agency.",
+                "insights", body, ld)
+
+def post_page(x):
+    r = "../"
+    path = f"insights/{x['slug']}.html"
+    items = [("Home", "index.html"), ("Insights", "insights/index.html"), (x["h1"], None)]
+    meta_line = f'<div class="post-meta"><span>{_fmt_date(x["date"])}</span><span>{_read_min(x)} min read</span><span>By {BRAND}</span></div>'
+    take = "".join(f"<li>{e(t)}</li>" for t in x["takeaways"])
+    faq = "".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in x["faq"])
+    others = [y for y in POSTS if y["slug"] != x["slug"]][:2]
+    more = "".join(f'<a class="glass" href="{y["slug"]}.html"><small>Guide</small><b>{e(y["h1"])}</b><span>{e(y["lede"])}</span></a>' for y in others)
+    body = page_hero(r, items, e(x["h1"]), e(x["lede"]), meta_line) + f"""
+<section class="block" style="padding-top:36px"><div class="wrap"><article class="article">
+  <div class="key-take glass"><b>Key takeaways</b><ul>{take}</ul></div>
+  <div class="prose">{x["body"].replace("{r}", r)}</div>
+</article></div></section>
+<section class="block" style="padding-top:0"><div class="wrap two">
+  <h2>Common questions</h2>
+  <div class="faq glass">{faq}</div>
+</div></section>
+<section class="block" style="padding-top:0"><div class="wrap">
+  <div class="sec-head left" style="margin-bottom:28px"><h2>Keep reading</h2></div>
+  <div class="posts">{more}</div>
+</div></section>
+{cta_band(r)}"""
+    ld = [ORG_LD, crumb_ld([("Home", ""), ("Insights", "insights/"), (x["h1"], path)]),
+          {"@context": "https://schema.org", "@type": "BlogPosting", "headline": x["h1"], "description": x["meta"], "url": abs_url(path),
+           "mainEntityOfPage": abs_url(path), "datePublished": x["date"], "dateModified": x.get("updated", x["date"]), "inLanguage": "en",
+           "image": OG_IMAGE, "author": {"@id": ORG_ID}, "publisher": {"@id": ORG_ID}, "isPartOf": {"@id": SITE_URL + "/insights/#blog"}},
+          {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+              {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in x["faq"]]}]
+    return page(r, path, x["title"], x["meta"], "insights", body, ld)
+
+CONTACT_FAQ = [
+  ("What happens after I send the form?", "We reply within one business day with first ideas, a few questions and a proposal for a free 30-minute discovery call."),
+  ("What should I write in the project details?", "A few lines are enough: which process or task you want to improve, which systems are involved (for example SAP, a CRM or Excel) and what success would look like."),
+  ("Which languages do you work in?", "English and Arabic. Interfaces, documents and AI assistants can be built in both, including right-to-left layouts."),
+  ("Do you work with companies outside the UAE?", "Yes. We are based in Dubai and work with companies across the GCC: Saudi Arabia, Qatar, Kuwait, Bahrain and Oman, mostly remotely with on-site workshops when needed."),
+  ("Is the first project really free?", "Yes. We build a pilot for one use case at no cost and with no obligation. You only pay if you decide to go ahead with the full solution."),
+]
 
 def contact():
     r = ""
-    body = f"""<section class="block" style="padding-top:64px"><div class="wrap">{crumbs(r, [("Home", "index.html"), ("Contact", None)])}{contact_block("h1")}</div></section>"""
-    return page(r, "contact.html", *SEO["contact"], "contact", body, [ORG_LD])
+    faq = "".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in CONTACT_FAQ)
+    body = f"""<section class="block" style="padding-top:64px"><div class="wrap">{crumbs(r, [("Home", "index.html"), ("Contact", None)])}{contact_block("h1")}</div></section>
+<section class="block" style="padding-top:0"><div class="wrap two">
+  <div><h2>Before you get in touch</h2><p class="intro">Answers to what people usually ask before their first call. Prefer to look first? <a class="link" href="{r}use-cases/index.html">Try the live demos</a> or see <a class="link" href="{r}pricing.html">typical prices</a>.</p></div>
+  <div class="faq glass">{faq}</div>
+</div></section>"""
+    ld = [ORG_LD, crumb_ld([("Home", ""), ("Contact", "contact.html")]),
+          {"@context": "https://schema.org", "@type": "ContactPage", "name": "Contact SDA AI Services", "url": abs_url("contact.html"), "about": {"@id": ORG_ID}},
+          {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+              {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in CONTACT_FAQ]}]
+    return page(r, "contact.html", *SEO["contact"], "contact", body, ld)
 
 
 def simple_page(path, title, meta, h1, body_html, noindex=False):
@@ -919,23 +1110,34 @@ def simple_page(path, title, meta, h1, body_html, noindex=False):
     body = hdr + f'<section class="block" style="padding-top:12px"><div class="wrap"><div class="prose legal glass">{body_html}</div></div></section>'
     return page(r, path, title, meta, "", body, noindex=noindex)
 
-# NOTE: legal texts are templates. Replace every [bracketed] value and have them reviewed before going live.
+PRIVACY_UPDATED = "11 November 2026"
+
 def privacy():
-    return simple_page("privacy.html", "Privacy policy", "How SDA AI Services handles personal data on this website.", "Privacy policy", f"""
-<p><b>Last updated:</b> [date]</p>
-<h2>Who is responsible</h2><p>[Company legal name], [street], [postal code] [city], [country]. Email: {EMAIL}.</p>
-<h2>Data we process</h2><p>When you visit this website, our hosting provider processes technical data such as your IP address, browser type and the pages you request. This is necessary to deliver the website securely (legitimate interest).</p>
-<p>When you send the contact form, we process your name, email address, company and message to answer your request. We delete this data when it is no longer needed for that purpose, unless we must keep it by law.</p>
+    analytics = ("<h2>Website analytics</h2><p>We use Cloudflare Web Analytics to count visits and see which pages are read. It works without cookies, "
+                 "does not create user profiles and does not track you across websites.</p>") if ANALYTICS else ""
+    return simple_page("privacy.html", "Privacy policy", "How SDA AI Services handles personal data on this website and when you contact us.", "Privacy policy", f"""
+<p><b>Last updated:</b> {PRIVACY_UPDATED}</p>
+<h2>Who is responsible</h2><p>SDA SERVICES L.L.C-FZ (trading as {BRAND}), Meydan Grandstand, 6th floor, Meydan Road, Nad Al Sheba, Dubai, United Arab Emirates. Email: <a href="mailto:{EMAIL}">{EMAIL}</a>.</p>
+<h2>Data we process when you visit</h2><p>When you visit this website, our hosting provider processes technical data such as your IP address, browser type, the time of access and the pages you request. This is necessary to deliver the website securely and to protect it against attacks. We do not use this data to identify you.</p>
+<h2>Cookies</h2><p>This website does not set cookies and does not use advertising or tracking tools.</p>
+{analytics}
+<h2>Contact form and email</h2><p>When you send the contact form or email us, we process your name, email address, company and message to answer your request and, if you wish, to prepare an offer. The form is processed on our hosting provider's infrastructure and delivered to our business mailbox. We delete this data when it is no longer needed for that purpose, unless we must keep it by law.</p>
 <h2>Demos on this website</h2><p>The interactive demos run entirely in your browser. Text, photos and signatures you enter in a demo are not sent to us or stored.</p>
-<h2>Service providers</h2><p>Hosting: [hosting provider and location]. Web fonts: Google Fonts (Google Ireland Ltd.); your browser connects to Google servers to load the fonts. [List any analytics or other tools here, or state that none are used.]</p>
-<h2>Your rights</h2><p>You can request access to, correction or deletion of your data, restrict or object to processing, and receive your data in a portable format. You can also complain to a data protection authority. Contact us at {EMAIL}.</p>""")
+<h2>Service providers</h2><ul><li><b>Hosting and security:</b> Cloudflare, Inc. (global content delivery network).</li><li><b>Business email:</b> Google Workspace (Google LLC).</li><li><b>Fonts:</b> served from our own server. Your browser does not connect to Google Fonts or other font services.</li></ul>
+<p>These providers may process data outside the UAE. We rely on their contractual data protection commitments.</p>
+<h2>Your rights</h2><p>Under the UAE Personal Data Protection Law (Federal Decree-Law No. 45 of 2021) and, where it applies to you, other data protection laws, you can request access to, correction or deletion of your data, restrict or object to processing, and receive your data in a portable format. Contact us at <a href="mailto:{EMAIL}">{EMAIL}</a>.</p>
+<h2>Changes</h2><p>We update this policy when our website or services change. The date at the top shows the latest version.</p>""")
 
 def legal():
-    return simple_page("legal-notice.html", "Legal notice", "Company information for SDA AI Services.", "Legal notice", f"""
-<h2>Company</h2><p>[Company legal name]<br>[Street and number]<br>[Postal code, city]<br>[Country]</p>
-<h2>Contact</h2><p>Email: {EMAIL}<br>Phone: [phone number]</p>
-<h2>Registration</h2><p>Registered at [court or registry], number [registration number]<br>VAT ID: [VAT number]</p>
-<h2>Represented by</h2><p>[Managing director name]</p>""")
+    reg = f"<h2>Registration</h2><p>Trade licence number: {e(LICENSE_NO)}</p>" if LICENSE_NO else ""
+    tel = f'<br>Phone: <a href="tel:{PHONE.replace(" ", "")}">{e(PHONE)}</a>' if PHONE else ""
+    return simple_page("legal-notice.html", "Legal notice", "Company information for SDA AI Services (SDA SERVICES L.L.C-FZ, Dubai, UAE).", "Legal notice", f"""
+<h2>Company</h2><p>SDA SERVICES L.L.C-FZ<br>Trading as {BRAND} (Software, Development, Applications &amp; AI Services)<br>Meydan Grandstand, 6th floor, Meydan Road<br>Nad Al Sheba, Dubai<br>United Arab Emirates</p>
+<h2>Contact</h2><p>Email: <a href="mailto:{EMAIL}">{EMAIL}</a>{tel}<br>Business hours: {HOURS}</p>
+{reg}
+<h2>Content</h2><p>We prepare the content of this website with care, but cannot guarantee that it is complete, correct and up to date at all times. Prices shown are starting prices in AED, excluding 5 % VAT; binding prices are agreed in a written offer.</p>
+<h2>Demos</h2><p>All demos on this website use fictional example data. Names of companies and people in the demos are invented.</p>
+<h2>Links</h2><p>We are not responsible for the content of external websites we link to.</p>""")
 
 def thanks():
     return simple_page("thanks.html", "Thank you", "We received your request.", "Thanks, we received your request",
@@ -965,7 +1167,10 @@ def main():
         else:
             shutil.copy(f, OUT / "assets" / f.name)
     pages = {"index.html": home(), "contact.html": contact(), "services/index.html": services_hub(), "use-cases/index.html": uc_hub(),
-             "pricing.html": pricing(), "privacy.html": privacy(), "legal-notice.html": legal(), "thanks.html": thanks(), "404.html": not_found()}
+             "pricing.html": pricing(), "privacy.html": privacy(), "legal-notice.html": legal(), "thanks.html": thanks(), "404.html": not_found(),
+             "about.html": about(), "insights/index.html": insights_hub()}
+    for x in POSTS:
+        pages[f"insights/{x['slug']}.html"] = post_page(x)
     for s in SERVICES:
         pages[f"services/{s['slug']}.html"] = service_page(s)
     for u in USE_CASES:
@@ -985,8 +1190,17 @@ def main():
     (OUT / "assets" / "demos.css").write_text("\n".join((d / f).read_text(encoding="utf-8") for d in parts for f in (["shared.css"] if d.name == "_shared" else ["demo.css"])), encoding="utf-8")
     (ROOT / "preview.html").write_text(pages["index.html"], encoding="utf-8")
     today = datetime.date.today().isoformat()
-    prio = lambda p: "1.0" if p == "index.html" else "0.9" if p in ("services/index.html", "pricing.html", "contact.html") or p.startswith("services/") else "0.3" if p in ("privacy.html", "legal-notice.html") else "0.8" if p.split("/")[0] in HUBS else "0.7"
-    urls = "".join(f"  <url><loc>{abs_url(p)}</loc><lastmod>{today}</lastmod><priority>{prio(p)}</priority></url>\n" for p in pages if p not in ("404.html", "thanks.html"))
+    # lastmod changes only when a page's content changes (hashes kept in src/lastmod.json)
+    lm_file = ROOT / "src" / "lastmod.json"
+    lm = json.loads(lm_file.read_text()) if lm_file.exists() else {}
+    for pth, frag in pages.items():
+        h = _hl.sha1(re.sub(r"\?v=[0-9a-f]{8}", "", frag).encode()).hexdigest()[:12]
+        if lm.get(pth, {}).get("hash") != h:
+            lm[pth] = {"hash": h, "date": today}
+    lm = {k: v for k, v in lm.items() if k in pages}
+    lm_file.write_text(json.dumps(lm, indent=1, sort_keys=True) + "\n")
+    prio = lambda p: "1.0" if p == "index.html" else "0.9" if p in ("services/index.html", "pricing.html", "contact.html", "locations/dubai.html") or p.startswith("services/") else "0.3" if p in ("privacy.html", "legal-notice.html") else "0.8" if p.split("/")[0] in HUBS or p.startswith("insights/") or p == "about.html" else "0.7"
+    urls = "".join(f"  <url><loc>{abs_url(p)}</loc><lastmod>{lm[p]['date']}</lastmod><priority>{prio(p)}</priority></url>\n" for p in pages if p not in ("404.html", "thanks.html"))
     (OUT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
     shutil.copy(ROOT / "src" / "_headers", OUT / "_headers")
     (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: {SITE_URL}/sitemap.xml\n")
@@ -1001,7 +1215,8 @@ def main():
             "\n## Industries\n" + sec([(x["name"], abs_url(f"industries/{x['slug']}.html"), x["meta"]) for x in LP_BY_KIND["industries"]]) +
             "\n## Regions\n" + sec([(x["name"], abs_url(f"locations/{x['slug']}.html"), x["meta"]) for x in LP_BY_KIND["locations"]]) +
             "\n## Live demos\n" + sec([(u["name"], abs_url(f"use-cases/{u['slug']}.html"), SEO.get(u["slug"], (0, u["meta"]))[1]) for u in USE_CASES]) +
-            "\n## Company\n" + sec([("Pricing", abs_url("pricing.html"), SEO["pricing"][1]), ("Contact", abs_url("contact.html"), SEO["contact"][1])]))
+            "\n## Insights\n" + sec([(x["h1"], abs_url(f"insights/{x['slug']}.html"), x["meta"]) for x in POSTS]) +
+            "\n## Company\n" + sec([("About us", abs_url("about.html"), "Who we are, how we work, where we work."), ("Pricing", abs_url("pricing.html"), SEO["pricing"][1]), ("Contact", abs_url("contact.html"), SEO["contact"][1])]))
     (OUT / "llms.txt").write_text(llms, encoding="utf-8")
     (OUT / "site.webmanifest").write_text(json.dumps({"name": BRAND, "short_name": "SDA AI", "start_url": "/", "display": "standalone",
         "background_color": "#F8F7F5", "theme_color": "#C2410C", "icons": [

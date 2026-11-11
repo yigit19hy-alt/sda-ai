@@ -2,7 +2,7 @@
 
 Three groups, each with its own hub page:
   industries/<slug>   AI for a sector (matches INDUSTRIES on the homepage)
-  locations/<slug>    AI development for a GCC market outside Dubai (Dubai is covered by the homepage and service pages)
+  locations/<slug>    AI development for one UAE/GCC market (Dubai, Abu Dhabi and the other GCC countries)
   solutions/<slug>    One specific, high-intent solution
 
 Every page has its own text. Keep it that way: near-identical pages for each city or country
@@ -14,17 +14,35 @@ HUBS = {
     name="Industries", title="AI Solutions by Industry in the UAE & GCC | SDA AI Services",
     meta="AI agents, automation and custom software for manufacturing, logistics, construction, real estate, professional services and energy in the UAE and GCC.",
     h1="AI solutions for your industry",
-    lede="The same building blocks, shaped around the processes, data and rules of your sector. Pick your industry to see where AI saves the most time, with live demos you can try."),
+    lede="The same building blocks, shaped around the processes, data and rules of your sector. Pick your industry to see where AI saves the most time, with live demos you can try.",
+    intro_h="Why industry matters for AI",
+    intro=["An AI agent for a property manager and one for a manufacturer use the same technology, but they read different documents, follow different approval rules and connect to different systems. That is why we start every project with the process of your sector, not with the model.",
+           "On each industry page you find the use cases that pay off first, the systems we usually connect to and a live demo you can try in your browser. If your sector is not listed, the building blocks are the same: tell us about your process and we propose a free pilot."],
+    faq=[("Which industries do you work with?", "Mainly manufacturing, logistics and wholesale, construction and field service, real estate and facilities, professional services, and energy and utilities. The same approach works for other sectors too."),
+         ("Do you know our industry software?", "We connect to the systems these sectors run, such as SAP and other ERPs, CRMs, property and fleet systems, through approved interfaces."),
+         ("Can we try something before we decide?", "Yes. Every project starts with a free pilot for one use case, on your own example data.")]),
   "locations": dict(
     name="Regions", title="AI Development Across the GCC | SDA AI Services",
     meta="Dubai-based AI development for companies in Abu Dhabi, Saudi Arabia, Qatar, Kuwait, Bahrain and Oman. Arabic and English, local data rules, free pilot.",
     h1="AI development across the GCC",
-    lede="We are based in Dubai and build AI agents, automation and custom software for companies across the Gulf. Each market has its own data rules, languages and priorities, and we plan for them from day one."),
+    lede="We are based in Dubai and build AI agents, automation and custom software for companies across the Gulf. Each market has its own data rules, languages and priorities, and we plan for them from day one.",
+    intro_h="One team for the whole Gulf",
+    intro=["Our office is in Dubai, and we work with companies in all six GCC countries. Most of the work happens remotely with regular video calls, and we come on site for workshops and go-live when a project needs it. The time difference is at most one hour.",
+           "What changes from country to country is mostly the rules: which data protection law applies, whether data must stay in the country, and which language your customers prefer. Each regional page explains what that means for an AI project there."],
+    faq=[("Which countries do you serve?", "The United Arab Emirates (Dubai and Abu Dhabi), Saudi Arabia, Qatar, Kuwait, Bahrain and Oman."),
+         ("Can our data stay in our country?", "In most cases yes. We deploy to cloud regions inside the country where they exist, or into your own environment."),
+         ("Do you work in Arabic?", "Yes. Applications, documents and AI assistants can be built in Arabic and English, including right-to-left layouts.")]),
   "solutions": dict(
     name="Solutions", title="AI Chatbots & Automation Solutions UAE | SDA AI Services",
     meta="Focused AI solutions for UAE and GCC businesses: WhatsApp AI chatbots, Arabic AI assistants and AI document processing for invoices and forms.",
     h1="Focused AI solutions",
-    lede="Some problems come up in almost every company we talk to. For these we have a proven approach, so you get a working pilot in days and a fixed price before you commit."),
+    lede="Some problems come up in almost every company we talk to. For these we have a proven approach, so you get a working pilot in days and a fixed price before you commit.",
+    intro_h="Proven setups for common requests",
+    intro=["Three requests reach us more often than any other: a chatbot that answers customers on WhatsApp, an assistant that works properly in Arabic, and a way to stop typing invoices and forms by hand. For each we have a tested setup, so the pilot can start on your own examples almost immediately.",
+           "Each solution can run on its own or become part of a larger system later, for example a WhatsApp assistant that creates orders in your ERP or a document flow that feeds a management dashboard."],
+    faq=[("How quickly can a solution go live?", "The free pilot usually runs within one to two weeks. A production rollout typically follows within a few weeks, depending on integrations."),
+         ("Can you combine the solutions?", "Yes. A WhatsApp assistant can use Arabic, read documents and hand cases to your team. We plan them as one system."),
+         ("What does a solution cost?", "The pilot is free. After that you get a fixed price; see our pricing page for typical starting prices.")]),
 }
 
 PAGES = [
@@ -198,6 +216,35 @@ dict(kind="industries", slug="energy", name="Energy & utilities",
   cta="Want field data in your system the same day?"),
 
 # ---------------------------------------------------------------- locations
+dict(kind="locations", slug="dubai", name="Dubai", country="United Arab Emirates", city="Dubai",
+  title="AI Agency in Dubai: AI Agents & Automation | SDA AI Services",
+  meta="Dubai AI agency for AI agents, workflow automation and custom software. Office in Meydan, Arabic and English, UAE hosting, free pilot project.",
+  h1="AI agency in Dubai",
+  lede="We are an AI agency with our office in Meydan, Dubai. We build AI agents, workflow automation and custom software for Dubai companies, from free zone start-ups to established groups with SAP and other ERP systems.",
+  facts=[("Office", "Meydan, Dubai"), ("Time zone", "GST, your time zone"), ("Languages", "English and Arabic"), ("Pilot", "Free, about one week")],
+  intro_h="Why Dubai companies work with a local AI agency",
+  intro=["Dubai companies move fast, and most of them do not need another AI strategy deck. They need a support agent that answers on WhatsApp tonight, an invoice flow that stops the month-end rush, or a dashboard that shows today's numbers instead of last week's. Being in the same city means we can sit with your team for a morning, see how the work is really done and turn that into a working pilot within days.",
+         "We build for the way business runs here: English and Arabic side by side, customers who expect answers on WhatsApp, teams that mix office staff and field crews, and data rules that differ between mainland, DIFC and the other free zones. Every project starts with a free pilot on your own examples, then a fixed price in AED, with no per-user fees."],
+  points_h="What we build for Dubai companies",
+  points=[("AI agents on WhatsApp and web", "Customer and employee assistants that answer from your documents and take actions in your systems."),
+          ("Workflow automation", "Invoices, approvals, onboarding and reporting that run without copy and paste between systems."),
+          ("Custom web apps and portals", "Customer portals, internal tools and dashboards built only for your company."),
+          ("Mobile and field apps", "Apps for technicians, drivers and site teams, with photos, GPS, signatures and offline mode."),
+          ("UAE data protection", "Designed for the UAE data protection law, and for DIFC or ADGM rules where they apply to you."),
+          ("Hosting in the UAE", "Applications and data in UAE cloud regions or in your own environment.")],
+  examples=[("Real estate", "Lead handling and viewing bookings for brokers and developers, with follow-ups on WhatsApp."),
+            ("Trading and logistics", "Order intake, proof of delivery and customer updates for Jebel Ali and free zone businesses."),
+            ("Hospitality and retail", "Arabic and English customer service assistant that checks bookings, orders and stock."),
+            ("Professional services", "A private AI assistant over contracts, policies and project files.")],
+  demos=["real-estate", "freight-forwarding", "workflow-management"],
+  services=["ai-agents", "workflow-automation", "web-applications"],
+  faq=[("Where is your office in Dubai?", "Our office is at Meydan Grandstand, Meydan Road, Nad Al Sheba, Dubai. We meet clients there, at their offices across Dubai or by video call."),
+       ("Do you work with DIFC and free zone companies?", "Yes. We work with mainland, DIFC and free zone companies, and plan for the data protection rules that apply to your licence, such as the DIFC Data Protection Law."),
+       ("Can our data stay in the UAE?", "Yes. We can host in UAE cloud regions or deploy into your own cloud or data centre."),
+       ("How fast can we see something working?", "Usually within one to two weeks. The free pilot covers one use case and runs on your own example data."),
+       ("What does an AI project in Dubai cost?", "The pilot is free. Typical projects start from AED 11,900 for a workflow automation and AED 13,900 for an AI agent, excluding VAT. See our pricing page for details.")],
+  cta="Planning an AI project in Dubai?"),
+
 dict(kind="locations", slug="abu-dhabi", name="Abu Dhabi", country="United Arab Emirates", city="Abu Dhabi",
   title="AI Development Company for Abu Dhabi | SDA AI Services",
   meta="AI agents, automation and custom software for companies in Abu Dhabi. UAE-based team, Arabic and English, UAE data protection, free pilot project.",

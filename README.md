@@ -41,9 +41,20 @@ Without either, the form tells visitors to email you directly.
 
 ## Before launch
 
-- [ ] Set `EMAIL` in `build.py` to your real address (currently `hello@sda-ai.services`).
+- [x] `EMAIL` in `build.py` is set to `yigit@sda-services.ai`.
 - [x] `SITE_URL` in `build.py` is set to `https://sda-services.ai`.
-- SEO landing pages (industries, GCC regions, solutions) live in `src/landing.py`. Keep each page unique.
-- [ ] Fill in every `[bracketed]` value in the privacy policy and legal notice (`privacy()` and `legal()` in `build.py`) and have them reviewed.
+- [x] Privacy policy and legal notice filled in (`privacy()` and `legal()` in `build.py`). Have them reviewed.
+- [ ] Optional values at the top of `build.py`: `PHONE`, `WHATSAPP`, `SOCIAL`, `LICENSE_NO`. Empty values are left out of the pages automatically.
+- [ ] After switching on Cloudflare Web Analytics, set `ANALYTICS = True` so the privacy policy mentions it.
 - [ ] Configure the contact form (see above).
-- [ ] Rebuild with `python3 build.py`, commit and push.
+- Rebuild with `python3 build.py`, commit and push.
+
+## Content
+
+| Where | What |
+|---|---|
+| `build.py` | Services, pricing, homepage, about, contact, legal pages |
+| `src/landing.py` | SEO landing pages: industries, regions (incl. Dubai), solutions. Keep each page unique. |
+| `src/insights.py` | Insights articles (blog). New article = new entry in `POSTS`. |
+| `src/lastmod.json` | Written by the build: the sitemap date of a page changes only when its content changes. |
+| `src/assets/fonts/` | Self-hosted Geist fonts (SIL Open Font License), no Google Fonts requests. |
