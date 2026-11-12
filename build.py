@@ -575,7 +575,9 @@ def contact_block(heading_tag="h2"):
 
 def related_reading(r, slugs):
     """Links to insights articles whose topics match any of the given page slugs."""
-    hits = [x for x in POSTS if set(x["topics"]) & set(slugs)][:3]
+    # the page's own slug counts most, then the number of shared topics; two cards fit the two-column grid
+    hits = sorted((x for x in POSTS if set(x["topics"]) & set(slugs)),
+                  key=lambda x: (slugs[0] in x["topics"], len(set(x["topics"]) & set(slugs))), reverse=True)[:2]
     if not hits:
         return ""
     cards = "".join(f'<a class="glass" href="{r}insights/{x["slug"]}.html"><small>Guide</small><b>{e(x["h1"])}</b><span>{e(x["lede"])}</span></a>' for x in hits)
@@ -673,6 +675,10 @@ def home():
   </div>
 </div></section>
 
+<section class="block" style="padding-top:20px"><div class="wrap">
+  <div class="sec-head"><h2>Insights for UAE and GCC companies</h2><p>Practical guides on AI costs, e-invoicing, data protection and automation. <a class="link" href="insights/index.html">All insights <span class="arr">→</span></a></p></div>
+  <div class="posts">{"".join(f'<a class="glass" href="insights/{x["slug"]}.html"><small>Guide</small><b>{e(x["h1"])}</b><span>{e(x["lede"])}</span></a>' for x in POSTS[:4])}</div>
+</div></section>
 <section class="block" id="contact" style="padding-top:20px"><div class="wrap">{contact_block()}</div></section>"""
     video_ld = {"@context": "https://schema.org", "@type": "VideoObject", "name": "SDA AI Services in 35 seconds",
                 "description": "AI agents, workflow automation and custom software for companies in the UAE and GCC, built by SDA AI Services in Dubai.",
@@ -767,6 +773,14 @@ def uc_page(u):
     how = '<div class="howto">' + "".join(f'<div class="glass"><b>{e(t)}</b><span>{e(d)}</span></div>' for t, d in u["how"]) + "</div>"
     rel = "".join(f'<a class="glass" href="{r}services/{k}.html"><b>{e(SVC[k]["name"])}</b><span>{e(SVC[k]["short"])}</span></a>' for k in u["services"])
     others = "".join(f'<a class="glass" href="{r}use-cases/{x["slug"]}.html"><b>{e(x["name"])} demo</b><span>{e(x["card"])}</span></a>' for x in USE_CASES if x["slug"] != u["slug"])
+    svc_names = " and ".join(lc(SVC[k]["name"]) for k in u["services"][:2])
+    uc_faq = [
+        ("Can we get a solution like this for our company?", f"Yes. The {lc(u['name'])} demo shows the idea with fictional data. We build your version around your own processes, data and systems, combining {svc_names}."),
+        ("How long does it take to build a solution like this?", "We start with a free pilot on your own examples, usually within one to two weeks. A production version typically follows within a few weeks, depending on integrations."),
+        ("Does it connect to our existing systems?", "Yes. We connect to ERP systems such as SAP, CRMs, email, calendars and spreadsheets through secure, approved interfaces."),
+        ("Does it work in Arabic and English?", "Yes. Screens, documents and AI answers can be built in English and Arabic, including right-to-left layouts."),
+    ]
+    faq = "".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in uc_faq)
     body = page_hero(r, items, e(u["h1"]).rstrip("."), e(u["lede"]), how) + f"""
 <section class="demo-stage"><div class="wrap">{DEMOS[u['slug']]()}
   <p class="note" style="margin-top:16px">This demo runs in your browser with fictional example data. In a real project it connects to your systems and uses a language model for the AI steps.</p>
@@ -775,6 +789,11 @@ def uc_page(u):
   <div class="sec-head left" style="margin-bottom:28px"><h2>Services behind this demo</h2><p>We combine these services to build solutions like this one around your processes.</p></div>
   <div class="related">{rel}</div>
 </div></section>
+<section class="block" style="padding-top:0"><div class="wrap two">
+  <h2>Questions about this demo</h2>
+  <div class="faq glass">{faq}</div>
+</div></section>
+{related_reading(r, [u['slug']] + u['services'])}
 <section class="block" style="padding-top:0"><div class="wrap">
   <div class="sec-head left" style="margin-bottom:28px"><h2>More demos</h2></div>
   <div class="related" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">{others}</div>
@@ -783,7 +802,9 @@ def uc_page(u):
     ld = [crumb_ld([("Home", ""), ("Use cases", "use-cases/"), (u["name"], path)]),
           {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": f"{u['name']} demo", "applicationCategory": "BusinessApplication",
            "operatingSystem": "Web", "description": u["meta"], "url": abs_url(path), "creator": {"@id": ORG_ID},
-           "offers": {"@type": "Offer", "price": "0", "priceCurrency": "AED", "description": "Free interactive demo"}}]
+           "offers": {"@type": "Offer", "price": "0", "priceCurrency": "AED", "description": "Free interactive demo"}},
+          {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+              {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in uc_faq]}]
     t, m = SEO.get(u["slug"], (u["title"], u["meta"]))
     return page(r, path, t, m, "use-cases", body, ld, demo=True)
 

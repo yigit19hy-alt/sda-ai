@@ -333,4 +333,228 @@ dict(slug="ai-invoice-processing-sap", date="2026-11-11",
        ("Can AI read Arabic invoices?", "Yes. Current AI models read English and Arabic invoices, including scans, and extract the fields needed for posting."),
        ("Do we need a template for each supplier?", "No. Unlike older OCR tools, AI models understand different invoice layouts without a template per supplier."),
        ("What happens with invoices that do not match?", "They go to the right person with the exact reason, such as a price difference or a missing goods receipt, so they can be resolved quickly.")]),
+dict(slug="uae-e-invoicing-2027", date="2026-11-12",
+  title="UAE E-Invoicing 2027: Deadlines and Steps",
+  meta="UAE e-invoicing timeline: AED 50m+ businesses go live 1 January 2027, others 1 July 2027. What it means for your ERP, invoices and processes.",
+  h1="UAE e-invoicing 2027: deadlines and what to do now",
+  lede="Structured e-invoicing becomes mandatory in the UAE from January 2027. This guide explains the timeline, what changes in practice and how to prepare your systems and processes.",
+  takeaways=["Businesses with revenue of AED 50 million or more go live on 1 January 2027; their deadline to appoint an Accredited Service Provider was 30 October 2026.",
+             "All other VAT-registered businesses must appoint a provider by 31 March 2027 and go live on 1 July 2027; government entities follow on 1 October 2027.",
+             "Invoices are exchanged as structured data (Peppol PINT AE) through Accredited Service Providers, not as PDFs.",
+             "The work is mostly in your ERP and master data; automation helps with mapping, checks and incoming invoices."],
+  topics=["ai-document-processing", "sap-integration", "workflow-automation", "dubai", "abu-dhabi", "data-management"],
+  body="""
+<p class="note">This article is a practical overview for planning, not tax advice. Check the current rules and your obligations with your tax adviser and the Federal Tax Authority (FTA).</p>
+
+<h2>What is changing</h2>
+<p>The UAE is replacing PDF and paper invoices between businesses with structured electronic invoices. Invoices are created as machine-readable data, sent through Accredited Service Providers (ASPs) and reported to the Federal Tax Authority. The UAE has adopted the Peppol framework with its own national specification, PINT AE.</p>
+<p>The mandate covers business-to-business (B2B) and business-to-government (B2G) invoices. Business-to-consumer (B2C) invoices are excluded for now.</p>
+
+<h2>The timeline</h2>
+<div class="tbl"><table>
+<thead><tr><th>Date</th><th>What applies</th></tr></thead>
+<tbody>
+<tr><td>1 July 2026</td><td>Pilot programme with selected taxpayers and voluntary adoption for any business</td></tr>
+<tr><td>30 October 2026</td><td>Deadline for businesses with revenue of AED 50 million or more to appoint an ASP (moved from 31 July 2026)</td></tr>
+<tr><td>1 January 2027</td><td>Mandatory e-invoicing for businesses with revenue of AED 50 million or more</td></tr>
+<tr><td>31 March 2027</td><td>Deadline for businesses below AED 50 million to appoint an ASP</td></tr>
+<tr><td>1 July 2027</td><td>Mandatory e-invoicing for all other in-scope VAT-registered businesses</td></tr>
+<tr><td>1 October 2027</td><td>Mandatory e-invoicing for in-scope government entities</td></tr>
+</tbody></table></div>
+<p>The legal basis is Ministerial Decisions No. 243 and 244 of 2025, with the deadline change made by Ministerial Decision No. 66 of 2026. Penalties apply for failing to implement the system or appoint a provider on time.</p>
+
+<h2>What it means in practice</h2>
+<h3>Your ERP must produce structured invoices</h3>
+<p>Every invoice needs a defined set of fields in the right format: your tax identifier, your customer's identifier, line items, quantities, units of measure, tax categories, rates and AED amounts. Many ERP systems need an update or an add-on, and master data such as customer tax numbers must be complete and correct.</p>
+<h3>You must be able to receive e-invoices</h3>
+<p>Your suppliers will send you structured invoices through their providers. Your accounts payable process has to take them in, check them and post them, ideally without anyone retyping data.</p>
+<h3>Data quality becomes visible</h3>
+<p>A PDF hides inconsistencies; structured data does not. Missing tax numbers, inconsistent units or wrong tax categories will cause rejected invoices. Cleaning master data early saves a lot of stress close to the deadline.</p>
+
+<h2>Where automation helps</h2>
+<ul>
+<li><b>Master data checks:</b> find customers and suppliers with missing or invalid tax numbers and incomplete addresses before go-live.</li>
+<li><b>Field mapping:</b> map the data your ERP already has to the fields your provider needs, and flag what is missing.</li>
+<li><b>Incoming invoices:</b> match received e-invoices against purchase orders and goods receipts, post clean invoices and route only the exceptions to your team.</li>
+<li><b>The transition period:</b> while some suppliers still send PDFs, AI can read them and feed them into the same process. See our guide to <a href="ai-invoice-processing-sap.html">AI invoice processing</a>.</li>
+<li><b>Monitoring:</b> a dashboard shows rejected invoices, reasons and trends so problems are fixed at the source.</li>
+</ul>
+
+<h2>A preparation checklist</h2>
+<ol>
+<li>Confirm your revenue band and deadline.</li>
+<li>Appoint an Accredited Service Provider (the FTA publishes the list).</li>
+<li>Check whether your ERP or accounting system can produce PINT AE data, and plan the update.</li>
+<li>Clean customer and supplier master data, especially tax identifiers.</li>
+<li>Redesign your accounts payable process for structured incoming invoices.</li>
+<li>Test with your provider before the go-live date and train your finance team.</li>
+</ol>
+<p>We are not an Accredited Service Provider. We help with the work around it: connecting your ERP, including <a href="../services/sap-integration.html">SAP</a>, cleaning data and automating invoice processing. <a href="../contact.html">Talk to us</a> about a free pilot.</p>
+""",
+  faq=[("When does e-invoicing become mandatory in the UAE?", "On 1 January 2027 for businesses with revenue of AED 50 million or more, on 1 July 2027 for other in-scope VAT-registered businesses and on 1 October 2027 for in-scope government entities. A pilot and voluntary phase started on 1 July 2026."),
+       ("Is a PDF invoice still valid under UAE e-invoicing?", "For in-scope B2B and B2G transactions, invoices must be exchanged as structured electronic data through an Accredited Service Provider. A PDF alone does not meet the requirement."),
+       ("Does UAE e-invoicing apply to B2C sales?", "Business-to-consumer transactions are excluded from the mandate for now."),
+       ("Do we need an Accredited Service Provider?", "Yes. In-scope businesses must appoint an Accredited Service Provider, which exchanges the e-invoices and reports data to the FTA.")]),
+
+dict(slug="zatca-e-invoicing-phase-2", date="2026-11-12",
+  title="ZATCA E-Invoicing Phase 2: Wave 25 Guide",
+  meta="ZATCA Phase 2 e-invoicing in Saudi Arabia: Wave 25 covers businesses above SAR 187,500 with integration by 1 February 2027. Requirements and preparation.",
+  h1="ZATCA e-invoicing Phase 2: what Wave 25 means for your business",
+  lede="Saudi Arabia keeps widening its e-invoicing integration phase. With Wave 25, many small and mid-sized businesses must connect their invoicing systems to ZATCA's Fatoora platform by February 2027.",
+  takeaways=["Phase 1 (since December 2021) required electronic invoices with a QR code; Phase 2 requires integration with ZATCA's Fatoora platform.",
+             "Wave 25 covers taxpayers with VAT-subject revenue above SAR 187,500 in 2022, 2023, 2024 or 2025.",
+             "Wave 25 taxpayers must complete integration by 1 February 2027; ZATCA notifies each wave at least six months ahead.",
+             "Integration is an ERP and process project, not a settings change. Start with your invoicing system and master data."],
+  topics=["saudi-arabia", "ai-document-processing", "sap-integration", "workflow-automation"],
+  body="""
+<p class="note">This article is a practical overview, not tax advice. ZATCA notifies affected taxpayers directly; check your obligations with your tax adviser.</p>
+
+<h2>Phase 1 and Phase 2 in short</h2>
+<p><b>Phase 1 (Generation)</b> started in December 2021. Businesses had to issue electronic invoices instead of paper ones, with required fields and a QR code.</p>
+<p><b>Phase 2 (Integration)</b> goes further. Your invoicing system must be connected to ZATCA's Fatoora platform, issue invoices in the prescribed XML format with a cryptographic stamp, and send them to ZATCA for clearance or reporting. ZATCA has rolled this out in waves since January 2023, starting with the largest taxpayers.</p>
+
+<h2>The latest waves</h2>
+<div class="tbl"><table>
+<thead><tr><th>Wave</th><th>VAT-subject revenue above</th><th>Reference years</th><th>Integration deadline</th></tr></thead>
+<tbody>
+<tr><td>Wave 24</td><td>SAR 375,000</td><td>2022, 2023 or 2024</td><td>30 June 2026</td></tr>
+<tr><td>Wave 25</td><td>SAR 187,500</td><td>2022, 2023, 2024 or 2025</td><td>1 February 2027</td></tr>
+</tbody></table></div>
+<p>ZATCA announced Wave 25 on 24 July 2026. It halves the threshold of Wave 24 and brings a large number of smaller businesses into scope. ZATCA informs targeted taxpayers at least six months before their integration date.</p>
+
+<h2>What Phase 2 requires</h2>
+<ul>
+<li>An invoicing solution that is onboarded to Fatoora and exchanges data with ZATCA.</li>
+<li>Invoices in the prescribed XML format with the additional Phase 2 fields.</li>
+<li>Cryptographic stamps, unique invoice identifiers and QR codes.</li>
+<li>Clearance of standard (B2B) tax invoices before they are shared with the buyer, and reporting of simplified (B2C) invoices.</li>
+<li>Secure storage of invoices.</li>
+</ul>
+
+<h2>Typical problems in integration projects</h2>
+<ul>
+<li><b>Old or custom invoicing software</b> that cannot produce the format or connect to Fatoora.</li>
+<li><b>Several systems issuing invoices</b>, for example ERP, point of sale and a separate service billing tool.</li>
+<li><b>Incomplete master data</b>, such as missing VAT numbers or addresses of business customers.</li>
+<li><b>Rejected invoices</b> that nobody monitors, which then block sales and collections.</li>
+</ul>
+
+<h2>How to prepare</h2>
+<ol>
+<li>Check whether your revenue in 2022 to 2025 crossed SAR 187,500 and watch for ZATCA's notification.</li>
+<li>List every system that issues invoices and confirm with each vendor that it supports Phase 2 integration.</li>
+<li>Clean customer master data, especially VAT numbers and addresses.</li>
+<li>Plan onboarding and testing well before 1 February 2027.</li>
+<li>Set up monitoring for rejected invoices and a clear process to fix them.</li>
+</ol>
+
+<h2>Where we help</h2>
+<p>We connect ERP systems, including <a href="../services/sap-integration.html">SAP</a>, to certified e-invoicing solutions, clean master data, and automate the processes around invoices, such as checking incoming supplier invoices and monitoring rejections. Learn more on our <a href="../locations/saudi-arabia.html">Saudi Arabia page</a> or read our <a href="ai-invoice-processing-sap.html">guide to AI invoice processing</a>.</p>
+""",
+  faq=[("What is ZATCA Wave 25?", "Wave 25 of the e-invoicing Integration Phase covers taxpayers whose VAT-subject revenue exceeded SAR 187,500 in 2022, 2023, 2024 or 2025. They must integrate with ZATCA's Fatoora platform by 1 February 2027."),
+       ("What is the difference between ZATCA Phase 1 and Phase 2?", "Phase 1 required issuing electronic invoices with a QR code. Phase 2 requires connecting your invoicing system to Fatoora, using the prescribed XML format with a cryptographic stamp, and clearing or reporting invoices to ZATCA."),
+       ("How will I know if my business is in a wave?", "ZATCA notifies the targeted taxpayers of each wave directly, at least six months before their integration deadline."),
+       ("Is a PDF invoice enough for ZATCA Phase 2?", "No. Phase 2 requires structured XML invoices exchanged with the Fatoora platform. A PDF emailed to the customer does not meet the requirement.")]),
+
+dict(slug="arabic-ai-chatbot-guide", date="2026-11-12",
+  title="Arabic AI Chatbot for Business: What Works",
+  meta="How to build an Arabic AI chatbot that customers trust: Gulf dialect, Arabic and English in one bot, right-to-left design, testing and typical costs in the UAE.",
+  h1="Arabic AI chatbots for business: what works",
+  lede="Many GCC customers write in Arabic, switch to English mid-sentence or send voice notes in Gulf dialect. Here is what it takes to build an AI assistant that handles all of that well.",
+  takeaways=["Current AI models handle Modern Standard Arabic and Gulf dialects well, but quality must be tested with real customer messages.",
+             "One assistant can answer in Arabic or English, following the language the customer uses.",
+             "Right-to-left layouts, Arabic names and numbers need deliberate design and testing.",
+             "Answers should come from your own approved content, with a clear hand-over to a person."],
+  topics=["arabic-ai-chatbot", "whatsapp-ai-chatbot", "ai-agents"],
+  body="""
+<h2>Why Arabic needs more than a translation</h2>
+<p>An Arabic chatbot is not an English chatbot with translated texts. Customers write in Modern Standard Arabic, in Gulf dialect, in Arabizi (Arabic written with Latin letters and numbers) or in a mix of Arabic and English. They expect the answer in the same style, with correct names, dates and numbers.</p>
+
+<h2>What modern AI models can do</h2>
+<ul>
+<li><b>Understand dialects:</b> large language models understand Gulf, Levantine and Egyptian Arabic well and can answer in a polite, neutral register.</li>
+<li><b>Switch languages:</b> one assistant can detect whether a customer writes in Arabic or English and answer accordingly.</li>
+<li><b>Handle voice notes:</b> speech recognition turns voice messages into text, which is common on WhatsApp in the Gulf.</li>
+<li><b>Read Arabic documents:</b> the assistant can answer from Arabic and English policies, price lists and contracts.</li>
+</ul>
+
+<h2>Where projects go wrong</h2>
+<h3>No real test data</h3>
+<p>Testing with a few textbook questions hides most problems. Collect a few hundred real messages from your customers, including dialect, spelling variants and mixed languages, and test against them before going live.</p>
+<h3>Machine-translated knowledge</h3>
+<p>If your FAQs and policies only exist in English, the assistant translates on the fly. That works for simple questions but can produce awkward or wrong terms for legal, medical or financial content. Have key texts reviewed by a native speaker.</p>
+<h3>Broken right-to-left layout</h3>
+<p>In web chats and apps, Arabic text must run right to left, while numbers, product codes and English words inside a sentence keep their direction. Test on real devices.</p>
+<h3>Names and numbers</h3>
+<p>Arabic names have many Latin spellings, and customers use both Arabic-Indic and Western digits. Searches for customers, orders and phone numbers must handle both.</p>
+
+<h2>What a good Arabic assistant does</h2>
+<ul>
+<li>Answers only from your approved content and says when it does not know.</li>
+<li>Uses a consistent, polite tone in Arabic and English.</li>
+<li>Checks orders, bookings or tickets in your systems when needed.</li>
+<li>Hands complex or sensitive cases to a person, with a summary in both languages if your team prefers English.</li>
+<li>Tells users that they are talking to an AI assistant.</li>
+</ul>
+
+<h2>Channels</h2>
+<p>Most GCC businesses start with <a href="whatsapp-ai-chatbot-business-uae.html">WhatsApp</a> and a web chat, then add voice or internal assistants for staff. The same knowledge and rules can serve every channel.</p>
+
+<h2>Costs</h2>
+<p>A focused assistant that answers from your own content typically starts around AED 13,900 for the build, excluding VAT, plus monthly running costs. Arabic and English, several channels and system integrations add to the scope. See our <a href="ai-agent-cost-uae.html">AI agent cost guide</a> and <a href="../pricing.html">pricing</a>.</p>
+<p>Want to see it with your own questions? <a href="../contact.html">Request a free pilot</a> or read more about our <a href="../solutions/arabic-ai-chatbot.html">Arabic AI assistants</a>.</p>
+""",
+  faq=[("Can an AI chatbot understand Gulf Arabic dialect?", "Yes. Current AI models understand Gulf dialect and other Arabic varieties well. Quality should still be tested with a sample of real messages from your customers."),
+       ("Can one chatbot answer in Arabic and English?", "Yes. The assistant detects the customer's language and answers in Arabic or English, and can switch within the same conversation."),
+       ("Can the chatbot understand WhatsApp voice notes in Arabic?", "Yes. Voice notes are converted to text with speech recognition and then answered like written messages."),
+       ("Do we need our content in Arabic?", "It helps. The assistant can translate on the fly, but key texts such as policies and prices should ideally exist in Arabic and be reviewed by a native speaker.")]),
+
+dict(slug="ai-real-estate-dubai", date="2026-11-12",
+  title="AI in Real Estate in Dubai: 7 Use Cases",
+  meta="Seven practical ways brokers, developers and property managers in Dubai use AI: lead response on WhatsApp, viewings, documents, tenant requests and reporting.",
+  h1="AI in real estate in Dubai: 7 practical use cases",
+  lede="Dubai's property market runs on speed: the agent who answers first often wins the deal. These seven use cases show where AI saves brokers, developers and property managers the most time.",
+  takeaways=["The fastest win is answering and qualifying leads on WhatsApp within seconds, day and night.",
+             "AI can prepare listings, compare documents and draft contracts for review, but people stay in control.",
+             "Property managers save time on tenant requests, maintenance tickets and renewals.",
+             "Start with one use case, measure response time or hours saved, then expand."],
+  topics=["real-estate", "whatsapp-ai-chatbot", "dubai", "ai-agents", "workflow-automation"],
+  body="""
+<h2>Why AI fits real estate</h2>
+<p>Real estate work is full of repeated questions, documents and follow-ups. Leads come in from portals, social media and WhatsApp at all hours. Every listing needs descriptions in English and often Arabic. Every tenancy brings contracts, renewals and maintenance requests. AI is good at exactly this kind of work, as long as a person stays in charge of the decisions.</p>
+
+<h2>1. Instant lead response on WhatsApp</h2>
+<p>An AI assistant answers new enquiries from portals and WhatsApp within seconds, in English or Arabic. It asks the questions your agents would ask, such as budget, area, bedrooms, move-in date and whether the client wants to buy or rent, and sends a summary to the right agent.</p>
+
+<h2>2. Viewing scheduling</h2>
+<p>The assistant offers available viewing slots, books them in the agent's calendar, sends reminders and handles rescheduling. Agents spend their time at viewings, not coordinating them.</p>
+
+<h2>3. Listing content</h2>
+<p>From property data and photos, AI drafts listing titles and descriptions in English and Arabic, in your brand voice. Agents review and publish. That saves time and keeps quality consistent across hundreds of listings.</p>
+
+<h2>4. Document checks</h2>
+<p>AI reads passports, title deeds, tenancy contracts and payment receipts, extracts the key data and flags missing or inconsistent information before a file goes to the next step. The final check stays with your team.</p>
+
+<h2>5. Tenant requests and maintenance</h2>
+<p>For property managers, an assistant takes maintenance requests on WhatsApp, asks for photos, creates a ticket, assigns a technician and keeps the tenant updated. Repeated questions about payments, access cards or move-out are answered automatically.</p>
+
+<h2>6. Renewals and follow-ups</h2>
+<p>Automated reminders for upcoming renewals, cheque dates and expiring documents, with a personal message drafted for the agent to send. Fewer missed renewals, fewer last-minute surprises.</p>
+
+<h2>7. Management reporting</h2>
+<p>A dashboard brings leads, viewings, deals, occupancy and collections together, with a short AI-written summary of what changed this week. Managers see where deals get stuck without asking for spreadsheets.</p>
+
+<h2>How to start</h2>
+<ol>
+<li>Pick the use case that costs your team the most time or deals, usually lead response.</li>
+<li>Collect real examples: recent enquiries, listings or tenant requests.</li>
+<li>Run a pilot for a few weeks and measure response time, booked viewings or hours saved.</li>
+<li>Connect your CRM and calendars once the pilot works, then add the next use case.</li>
+</ol>
+<p>Try our <a href="../use-cases/real-estate.html">real estate demo</a>, see how we work with <a href="../industries/real-estate.html">real estate and facilities companies</a>, or <a href="../contact.html">request a free pilot</a>.</p>
+""",
+  faq=[("How can real estate agents in Dubai use AI?", "Most start with an AI assistant that answers and qualifies leads on WhatsApp, books viewings and sends summaries to agents. Listing descriptions, document checks and reporting follow."),
+       ("Can an AI assistant answer property enquiries in Arabic?", "Yes. The assistant answers in Arabic or English, depending on the language the client uses."),
+       ("Does AI replace real estate agents?", "No. AI takes over repetitive work such as first replies, scheduling and paperwork, so agents can spend more time with clients and closing deals."),
+       ("Can AI connect to our CRM?", "Yes. Leads, viewings and notes can be written to your CRM so your team keeps one complete record.")]),
 ]
