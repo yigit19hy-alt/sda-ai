@@ -20,13 +20,58 @@
  */
 const TO = 'yigit@sda-services.ai';
 const SECRET = 'PASTE-SECRET-HERE';
+const BOOKING_URL = 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ0NwR_cV6fana6F9QDSuWfoKAGoRw3_kfl0jSYuho7E-LeVSI1pGvLhfV6qC5lEAHz7iyCo_OBK';
+const WHATSAPP = '+971 54 237 7342';
+const WHATSAPP_URL = 'https://wa.me/971542377342';
+const CONFIRM_CAP = 40;  // max. confirmation mails per 6 hours (protects against abuse of the form)
 
 function doPost(e) {
   let d = {};
   try { d = JSON.parse(e.postData.contents); } catch (err) { return out_({ ok: false, error: 'Invalid request' }); }
   if (!SECRET || SECRET === 'PASTE-SECRET-HERE' || d.secret !== SECRET) return out_({ ok: false, error: 'Forbidden' });
   send_(d);
+  try { confirm_(d); } catch (err) { console.warn('Confirmation not sent: ' + err); }
   return out_({ ok: true });
+}
+
+/**
+ * Short automatic confirmation to the person who sent the form.
+ * Never repeats what they typed (only a plain first name), so it cannot be used to send spam,
+ * and is limited to one mail per address every 6 hours and CONFIRM_CAP mails per 6 hours.
+ */
+function confirm_(d) {
+  const email = String(d.email || '').trim().slice(0, 200);
+  if (!/^[^\s@<>()",;:]+@[^\s@<>()",;:]+\.[^\s@<>()",;:]{2,}$/.test(email)) return;
+  const cache = CacheService.getScriptCache();
+  const key = 'confirm:' + email.toLowerCase();
+  if (cache.get(key)) return;
+  const count = Number(cache.get('confirm-count') || 0);
+  if (count >= CONFIRM_CAP) return;
+  cache.put(key, '1', 21600);
+  cache.put('confirm-count', String(count + 1), 21600);
+
+  const first = String(d.name || '').trim().split(/\s+/)[0];
+  const hello = /^[\p{L}][\p{L}'-]{0,29}$/u.test(first) ? 'Hi ' + first + ',' : 'Hello,';
+  const body = [
+    hello,
+    '',
+    'thank you for contacting SDA AI Services. We have received your request and will reply within one business day with first ideas and a proposed next step.',
+    '',
+    'Want to talk sooner? Book a free 30-minute call at a time that suits you:',
+    BOOKING_URL,
+    '',
+    'Or message us on WhatsApp: ' + WHATSAPP,
+    WHATSAPP_URL,
+    '',
+    'Best regards',
+    'SDA AI Services',
+    'Software, Development, Applications & AI Services',
+    'Meydan Grandstand, Dubai, United Arab Emirates',
+    'https://sda-services.ai',
+    '',
+    'This is an automatic confirmation. Simply reply to this email if you want to add anything.',
+  ].join('\n');
+  MailApp.sendEmail(email, 'We received your request – SDA AI Services', body, { name: 'SDA AI Services', replyTo: TO });
 }
 
 function send_(d) {

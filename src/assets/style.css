@@ -844,6 +844,11 @@ footer .logo-svg{height:46px}
 .info-list a{color:var(--ink-2)}
 .btn-wa{background:#1FA855;color:#fff;border-color:#1FA855}
 .btn-wa:hover{background:#178C46}
+/* Hero trust line under the main call-to-action */
+.hero-trust{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 22px;margin:22px 0 0;padding:0;list-style:none;font-size:15px;color:var(--dim)}
+.hero-trust li{display:inline-flex;align-items:center;gap:7px}
+.hero-trust svg{width:17px;height:17px;flex:none;color:var(--ok)}
+.hero-trust b{color:var(--ink);font-weight:600}
 /* Floating WhatsApp button (all pages) */
 .wa-float{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));z-index:45;display:inline-flex;align-items:center;gap:8px;padding:12px 18px 12px 14px;border-radius:999px;background:#1FA855;color:#fff;font-weight:600;font-size:15px;line-height:1;text-decoration:none;box-shadow:0 12px 28px -10px rgba(16,90,48,.6),0 2px 6px rgba(16,90,48,.25);transition:transform .2s var(--ease-out),background .2s ease}
 .wa-float:hover{background:#178C46;transform:translateY(-2px)}

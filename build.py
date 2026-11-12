@@ -16,9 +16,11 @@ PHONE = ""        # e.g. "+971 50 123 4567" (shown as click-to-call and in the s
 WHATSAPP = "971542377342"            # digits only incl. country code (adds WhatsApp buttons)
 WHATSAPP_DISPLAY = "+971 54 237 7342" # how the number is shown on the pages
 WHATSAPP_TEXT = "Hello SDA AI Services, I would like to talk about a project."  # pre-filled first message
+# Google Calendar booking page (yigit@sda-services.ai, "Free 30-minute discovery call", Mon–Fri 9–17 Dubai time)
+BOOKING_URL = "https://calendar.google.com/calendar/appointments/schedules/AcZssZ0NwR_cV6fana6F9QDSuWfoKAGoRw3_kfl0jSYuho7E-LeVSI1pGvLhfV6qC5lEAHz7iyCo_OBK"
 SOCIAL = []       # profile URLs, e.g. ["https://www.linkedin.com/company/sda-ai-services"] (schema sameAs + footer)
 LICENSE_NO = ""   # trade licence number, shown in the legal notice
-ANALYTICS = False # set True once Cloudflare Web Analytics is switched on (adds the note to the privacy policy)
+ANALYTICS = True  # Cloudflare Web Analytics is on (automatic setup, visitors outside the EU); adds the note to the privacy policy
 HOURS = "Monday to Friday, 9:00 to 17:00 (Dubai time, GST)"
 # Search engine ownership tags (meta tag method; the page must stay online for verification to remain valid)
 GOOGLE_VERIFY = "W83usJuTZkKzF4BUP-gteEH0HNXG2-AM-9VH7z4Hkew"
@@ -36,8 +38,16 @@ WA_URL = f"https://wa.me/{WHATSAPP}?text={_quote(WHATSAPP_TEXT)}" if WHATSAPP el
 WA_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6c-4.85 0-8.7 3.45-8.7 7.8 0 2.3 1.05 4.35 2.75 5.8l-.75 3.2 3.5-1.75c1 .35 2.05.55 3.2.55 4.85 0 8.7-3.45 8.7-7.8S16.85 3.6 12 3.6Z" '
            'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="8.4" cy="11.4" r="1.1" fill="currentColor"/>'
            '<circle cx="12" cy="11.4" r="1.1" fill="currentColor"/><circle cx="15.6" cy="11.4" r="1.1" fill="currentColor"/></svg>')
+CHECK_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4.5 10.5 3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 
 e = html.escape
+
+def book_btn(r, cls="btn btn-primary", label="Book a discovery call"):
+    """Primary call-to-action: opens the booking page, falls back to the contact page."""
+    if BOOKING_URL:
+        return f'<a class="{cls}" href="{BOOKING_URL}" target="_blank" rel="noopener">{label} <span class="arr">→</span></a>'
+    return f'<a class="{cls}" href="{r}contact.html">{label} <span class="arr">→</span></a>'
+
 def lc(t):
     """Lower-case the first letter for use mid-sentence, but keep acronyms such as AI, HR or SAP."""
     return t if len(t) > 1 and t[1].isupper() else t[:1].lower() + t[1:]
@@ -455,7 +465,7 @@ def footer(r, demo=False):
 
 def cta_band(r, h="Ready to put AI to work?", p="Tell us about your process. We reply within one business day with first ideas and a proposed next step."):
     return f"""<section class="block" style="padding-top:0"><div class="wrap"><div class="cta-card glass-strong"><h2>{h}</h2><p>{p}</p>
-<div class="cta-row"><a class="btn btn-primary" href="{r}contact.html">Book a discovery call <span class="arr">→</span></a><a class="btn btn-glass" href="{r}use-cases/index.html">Try the live demos</a></div></div></div></section>"""
+<div class="cta-row">{book_btn(r)}<a class="btn btn-glass" href="{r}use-cases/index.html">Try the live demos</a></div></div></div></section>"""
 
 def crumbs(r, items):
     home_ic = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 9 10 3.5 16.5 9v7.5h-4.5V12H8v4.5H3.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>'
@@ -559,11 +569,13 @@ def contact_block(heading_tag="h2"):
     wa = f'<a class="btn btn-wa btn-sm" href="{WA_URL}" target="_blank" rel="noopener">Chat on WhatsApp</a>' if WHATSAPP else ""
     tel = f'\n      <li><b>Phone</b><a href="tel:{PHONE.replace(" ", "")}">{e(PHONE)}</a></li>' if PHONE else ""
     if WHATSAPP: tel += f'\n      <li><b>WhatsApp</b><a href="{WA_URL}" target="_blank" rel="noopener">{e(WHATSAPP_DISPLAY)}</a></li>'
+    book = book_btn("", "btn btn-primary btn-sm", "Book a free 30-min call") if BOOKING_URL else ""
+    if BOOKING_URL: tel = f'\n      <li><b>Discovery call</b><a href="{BOOKING_URL}" target="_blank" rel="noopener">Book a free 30-minute video call</a> at a time that suits you</li>' + tel
     return f"""<div class="contact">
   <div class="contact-copy">
     <{heading_tag}>Have a process that <em>should</em> run itself?</{heading_tag}>
     <p>Tell us what you want to automate or build. We reply within one business day with first ideas and a proposed next step.</p>
-    <div class="mail"><code id="mail">{EMAIL}</code><button class="btn btn-glass btn-sm" id="copy" type="button">Copy email</button>{wa}</div>
+    <div class="mail"><code id="mail">{EMAIL}</code><button class="btn btn-glass btn-sm" id="copy" type="button">Copy email</button>{wa}{book}</div>
     <ul class="info-list">
       <li><b>Office</b>SDA SERVICES L.L.C-FZ, Meydan Grandstand, 6th floor, Meydan Road, Nad Al Sheba, Dubai, UAE</li>
       <li><b>Hours</b>{HOURS}</li>
@@ -638,9 +650,10 @@ def home():
     pdata = json.dumps([dict(q=p["q"], title=p["title"], steps=p["steps"], time=p["time"], slug=p["slug"], svc=SVC[p["slug"]]["name"]) for p in PROMPTS])
     body = f"""<header class="hero"><div class="wrap">
   <p class="kicker rise">{SP}AI agency in Dubai for the UAE &amp; GCC</p>
-  <h1 class="rise">AI that works the way your <span class="soft">team</span> does{SPG()}</h1>
+  <h1 class="rise">AI that takes <span class="soft">manual work</span> off your team{SPG()}</h1>
   <p class="lede rise d1">From Dubai, SDA AI Services designs, builds and runs <b>AI agents, automation and custom software</b> for companies across the UAE and GCC that want working systems in production, not slide decks.</p>
-  <div class="cta-row rise d2"><a class="btn btn-primary" href="contact.html">Book a discovery call <span class="arr">→</span></a><a class="btn btn-glass" href="use-cases/index.html">Try the live demos</a></div>
+  <div class="cta-row rise d2">{book_btn(r)}<a class="btn btn-glass" href="use-cases/index.html">Try the live demos</a></div>
+  <ul class="hero-trust rise d2" aria-label="Why it is low risk"><li>{CHECK_ICON}<b>Free pilot</b>, no obligation</li><li>{CHECK_ICON}Fixed prices</li><li>{CHECK_ICON}Reply within one business day</li></ul>
   <div class="ask rise d3" id="prompt">
     <form class="ask-bar" id="ask-form" role="search" aria-label="Describe what you want to automate">
       <div class="ask-in">{ASK_ICON}<label for="ask-q" class="skip" style="position:absolute;left:-999px">What should AI do for you?</label>
@@ -1020,7 +1033,7 @@ def about():
     r = ""
     items = [("Home", "index.html"), ("About us", None)]
     side = """<dl class="facts glass-strong"><div><dt>Company</dt><dd>SDA SERVICES L.L.C-FZ</dd></div><div><dt>Office</dt><dd>Meydan, Dubai, UAE</dd></div><div><dt>Experience</dt><dd>10+ years in enterprise software</dd></div><div><dt>Projects</dt><dd>25+ delivered</dd></div><div><dt>Languages</dt><dd>English and Arabic</dd></div></dl>"""
-    extra = f'<div class="cta-row"><a class="btn btn-primary" href="{r}contact.html">Book a discovery call <span class="arr">→</span></a><a class="btn btn-glass" href="{r}use-cases/index.html">Try the live demos</a></div>'
+    extra = f'<div class="cta-row">{book_btn(r)}<a class="btn btn-glass" href="{r}use-cases/index.html">Try the live demos</a></div>'
     faq = "".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in ABOUT_FAQ)
     body = page_hero(r, items, "About SDA AI Services", "We are a Dubai-based AI agency. We design, build and run AI agents, automation and custom software for companies in the UAE and GCC that want systems in production, not slide decks.", extra, side) + f"""
 <section class="block" style="padding-top:48px"><div class="wrap two">
@@ -1156,13 +1169,17 @@ def privacy():
                 "under its own terms and privacy policy. We use your messages only to answer your request. The WhatsApp buttons on this website are "
                 "plain links: no data is sent to WhatsApp until you open the chat yourself.</p>") if WHATSAPP else ""
     wa_provider = "<li><b>Messaging:</b> WhatsApp (Meta Platforms), only if you contact us there.</li>" if WHATSAPP else ""
+    booking = ("<h2>Booking a call</h2><p>If you book a discovery call, Google Calendar (Google LLC) processes your name, email address and the "
+               "details you enter to schedule the meeting and send you the invitation. The call takes place on Google Meet. We use these details "
+               "only to prepare and hold the call.</p>") if BOOKING_URL else ""
     return simple_page("privacy.html", "Privacy policy", "How SDA AI Services handles personal data on this website and when you contact us.", "Privacy policy", f"""
 <p><b>Last updated:</b> {PRIVACY_UPDATED}</p>
 <h2>Who is responsible</h2><p>SDA SERVICES L.L.C-FZ (trading as {BRAND}), Meydan Grandstand, 6th floor, Meydan Road, Nad Al Sheba, Dubai, United Arab Emirates. Email: <a href="mailto:{EMAIL}">{EMAIL}</a>.</p>
 <h2>Data we process when you visit</h2><p>When you visit this website, our hosting provider processes technical data such as your IP address, browser type, the time of access and the pages you request. This is necessary to deliver the website securely and to protect it against attacks. We do not use this data to identify you.</p>
 <h2>Cookies</h2><p>This website does not set cookies and does not use advertising or tracking tools.</p>
 {analytics}
-<h2>Contact form and email</h2><p>When you send the contact form or email us, we process your name, email address, company and message to answer your request and, if you wish, to prepare an offer. The form is processed on our hosting provider's infrastructure and delivered to our business mailbox. We delete this data when it is no longer needed for that purpose, unless we must keep it by law.</p>
+<h2>Contact form and email</h2><p>When you send the contact form or email us, we process your name, email address, company and message to answer your request and, if you wish, to prepare an offer. The form is processed on our hosting provider's infrastructure and delivered to our business mailbox. You receive a short automatic confirmation by email. We delete this data when it is no longer needed for that purpose, unless we must keep it by law.</p>
+{booking}
 {whatsapp}
 <h2>Demos on this website</h2><p>The interactive demos run entirely in your browser. Text, photos and signatures you enter in a demo are not sent to us or stored.</p>
 <h2>Service providers</h2><ul><li><b>Hosting and security:</b> Cloudflare, Inc. (global content delivery network).</li><li><b>Business email:</b> Google Workspace (Google LLC).</li>{wa_provider}<li><b>Fonts:</b> served from our own server. Your browser does not connect to Google Fonts or other font services.</li></ul>
