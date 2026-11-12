@@ -653,7 +653,7 @@ def home():
   <h1 class="rise">AI that takes <span class="soft">manual work</span> off your team{SPG()}</h1>
   <p class="lede rise d1">From Dubai, SDA AI Services designs, builds and runs <b>AI agents, automation and custom software</b> for companies across the UAE and GCC that want working systems in production, not slide decks.</p>
   <div class="cta-row rise d2">{book_btn(r)}<a class="btn btn-glass" href="use-cases/index.html">Try the live demos</a></div>
-  <ul class="hero-trust rise d2" aria-label="Why it is low risk"><li>{CHECK_ICON}<b>Free pilot</b>, no obligation</li><li>{CHECK_ICON}Fixed prices</li><li>{CHECK_ICON}Reply within one business day</li></ul>
+  <ul class="hero-trust rise d2" aria-label="Why it is low risk"><li>{CHECK_ICON}<span><b>Free pilot</b>, no obligation</span></li><li>{CHECK_ICON}<span>Fixed prices</span></li><li>{CHECK_ICON}<span>Reply within one business day</span></li></ul>
   <div class="ask rise d3" id="prompt">
     <form class="ask-bar" id="ask-form" role="search" aria-label="Describe what you want to automate">
       <div class="ask-in">{ASK_ICON}<label for="ask-q" class="skip" style="position:absolute;left:-999px">What should AI do for you?</label>
