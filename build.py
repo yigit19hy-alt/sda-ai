@@ -13,7 +13,9 @@ EMAIL = "yigit@sda-services.ai"
 BRAND = "SDA AI Services"
 # Fill these in when ready. Empty values are simply left out of the pages and the structured data.
 PHONE = ""        # e.g. "+971 50 123 4567" (shown as click-to-call and in the schema)
-WHATSAPP = ""     # digits only incl. country code, e.g. "971501234567" (adds WhatsApp buttons)
+WHATSAPP = "971542377342"            # digits only incl. country code (adds WhatsApp buttons)
+WHATSAPP_DISPLAY = "+971 54 237 7342" # how the number is shown on the pages
+WHATSAPP_TEXT = "Hello SDA AI Services, I would like to talk about a project."  # pre-filled first message
 SOCIAL = []       # profile URLs, e.g. ["https://www.linkedin.com/company/sda-ai-services"] (schema sameAs + footer)
 LICENSE_NO = ""   # trade licence number, shown in the legal notice
 ANALYTICS = False # set True once Cloudflare Web Analytics is switched on (adds the note to the privacy policy)
@@ -28,6 +30,12 @@ OG_IMAGE = "https://sda-services.ai/assets/brand/og-image.jpg"
 import hashlib as _hl
 ASSET_V = _hl.sha1(b"".join(p.read_bytes() for p in sorted([*(ROOT / "src" / "assets").glob("*.css"), *(ROOT / "src" / "assets").glob("*.js"), *(ROOT / "src" / "demos").rglob("*.*")]) if p.suffix in (".css", ".js", ".py"))).hexdigest()[:8]
 OUT = ROOT / "site"
+
+from urllib.parse import quote as _quote
+WA_URL = f"https://wa.me/{WHATSAPP}?text={_quote(WHATSAPP_TEXT)}" if WHATSAPP else ""
+WA_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6c-4.85 0-8.7 3.45-8.7 7.8 0 2.3 1.05 4.35 2.75 5.8l-.75 3.2 3.5-1.75c1 .35 2.05.55 3.2.55 4.85 0 8.7-3.45 8.7-7.8S16.85 3.6 12 3.6Z" '
+           'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="8.4" cy="11.4" r="1.1" fill="currentColor"/>'
+           '<circle cx="12" cy="11.4" r="1.1" fill="currentColor"/><circle cx="15.6" cy="11.4" r="1.1" fill="currentColor"/></svg>')
 
 e = html.escape
 def lc(t):
@@ -427,8 +435,10 @@ def footer(r, demo=False):
     demo_js = f'\n<script src="/assets/demos.js?v={ASSET_V}"></script>' if demo else ""
     contact_li = f'<li><a href="mailto:{EMAIL}">{EMAIL}</a></li>'
     if PHONE: contact_li += f'<li><a href="tel:{PHONE.replace(" ", "")}">{e(PHONE)}</a></li>'
-    if WHATSAPP: contact_li += f'<li><a href="https://wa.me/{WHATSAPP}" rel="noopener">WhatsApp</a></li>'
+    if WHATSAPP: contact_li += f'<li><a href="{WA_URL}" target="_blank" rel="noopener">WhatsApp</a></li>'
     social = "".join(f'<li><a href="{u}" rel="noopener me">{e(_social_name(u))}</a></li>' for u in SOCIAL)
+    wa_float = (f'\n<a class="wa-float" href="{WA_URL}" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp ({WHATSAPP_DISPLAY})">'
+                f'{WA_ICON}<span>WhatsApp</span></a>') if WHATSAPP else ""
     return f"""<footer>
   <div class="wrap">
     <div class="foot glass">
@@ -440,7 +450,7 @@ def footer(r, demo=False):
     </div>
     <div class="foot-base"><span>© <span id="yr">2026</span> {BRAND}</span><span><a href="{r}privacy.html">Privacy policy</a> · <a href="{r}legal-notice.html">Legal notice</a></span></div>
   </div>
-</footer>
+</footer>{wa_float}
 <script src="/assets/main.js?v={ASSET_V}"></script>{demo_js}"""
 
 def cta_band(r, h="Ready to put AI to work?", p="Tell us about your process. We reply within one business day with first ideas and a proposed next step."):
@@ -546,8 +556,9 @@ PROCESS = """<div class="steps">
 
 def contact_block(heading_tag="h2"):
     opts = "".join(f"<option>{e(s['name'])}</option>" for s in SERVICES) + "<option>Not sure yet</option>"
-    wa = f'<a class="btn btn-wa btn-sm" href="https://wa.me/{WHATSAPP}" rel="noopener">Chat on WhatsApp</a>' if WHATSAPP else ""
+    wa = f'<a class="btn btn-wa btn-sm" href="{WA_URL}" target="_blank" rel="noopener">Chat on WhatsApp</a>' if WHATSAPP else ""
     tel = f'\n      <li><b>Phone</b><a href="tel:{PHONE.replace(" ", "")}">{e(PHONE)}</a></li>' if PHONE else ""
+    if WHATSAPP: tel += f'\n      <li><b>WhatsApp</b><a href="{WA_URL}" target="_blank" rel="noopener">{e(WHATSAPP_DISPLAY)}</a></li>'
     return f"""<div class="contact">
   <div class="contact-copy">
     <{heading_tag}>Have a process that <em>should</em> run itself?</{heading_tag}>
@@ -1112,6 +1123,8 @@ CONTACT_FAQ = [
   ("Do you work with companies outside the UAE?", "Yes. We are based in Dubai and work with companies across the GCC: Saudi Arabia, Qatar, Kuwait, Bahrain and Oman, mostly remotely with on-site workshops when needed."),
   ("Is the first project really free?", "Yes. We build a pilot for one use case at no cost and with no obligation. You only pay if you decide to go ahead with the full solution."),
 ]
+if WHATSAPP:
+    CONTACT_FAQ.insert(1, ("Can I contact you on WhatsApp?", f"Yes. Message us on WhatsApp at {WHATSAPP_DISPLAY}. We answer during business hours: {HOURS}. Messages sent outside these hours get a reply on the next business day."))
 
 def contact():
     r = ""
@@ -1134,11 +1147,15 @@ def simple_page(path, title, meta, h1, body_html, noindex=False):
     body = hdr + f'<section class="block" style="padding-top:12px"><div class="wrap"><div class="prose legal glass">{body_html}</div></div></section>'
     return page(r, path, title, meta, "", body, noindex=noindex)
 
-PRIVACY_UPDATED = "11 November 2026"
+PRIVACY_UPDATED = "12 November 2026"
 
 def privacy():
     analytics = ("<h2>Website analytics</h2><p>We use Cloudflare Web Analytics to count visits and see which pages are read. It works without cookies, "
                  "does not create user profiles and does not track you across websites.</p>") if ANALYTICS else ""
+    whatsapp = ("<h2>WhatsApp</h2><p>If you contact us on WhatsApp, WhatsApp (operated by Meta Platforms) processes your phone number, profile name and messages "
+                "under its own terms and privacy policy. We use your messages only to answer your request. The WhatsApp buttons on this website are "
+                "plain links: no data is sent to WhatsApp until you open the chat yourself.</p>") if WHATSAPP else ""
+    wa_provider = "<li><b>Messaging:</b> WhatsApp (Meta Platforms), only if you contact us there.</li>" if WHATSAPP else ""
     return simple_page("privacy.html", "Privacy policy", "How SDA AI Services handles personal data on this website and when you contact us.", "Privacy policy", f"""
 <p><b>Last updated:</b> {PRIVACY_UPDATED}</p>
 <h2>Who is responsible</h2><p>SDA SERVICES L.L.C-FZ (trading as {BRAND}), Meydan Grandstand, 6th floor, Meydan Road, Nad Al Sheba, Dubai, United Arab Emirates. Email: <a href="mailto:{EMAIL}">{EMAIL}</a>.</p>
@@ -1146,8 +1163,9 @@ def privacy():
 <h2>Cookies</h2><p>This website does not set cookies and does not use advertising or tracking tools.</p>
 {analytics}
 <h2>Contact form and email</h2><p>When you send the contact form or email us, we process your name, email address, company and message to answer your request and, if you wish, to prepare an offer. The form is processed on our hosting provider's infrastructure and delivered to our business mailbox. We delete this data when it is no longer needed for that purpose, unless we must keep it by law.</p>
+{whatsapp}
 <h2>Demos on this website</h2><p>The interactive demos run entirely in your browser. Text, photos and signatures you enter in a demo are not sent to us or stored.</p>
-<h2>Service providers</h2><ul><li><b>Hosting and security:</b> Cloudflare, Inc. (global content delivery network).</li><li><b>Business email:</b> Google Workspace (Google LLC).</li><li><b>Fonts:</b> served from our own server. Your browser does not connect to Google Fonts or other font services.</li></ul>
+<h2>Service providers</h2><ul><li><b>Hosting and security:</b> Cloudflare, Inc. (global content delivery network).</li><li><b>Business email:</b> Google Workspace (Google LLC).</li>{wa_provider}<li><b>Fonts:</b> served from our own server. Your browser does not connect to Google Fonts or other font services.</li></ul>
 <p>These providers may process data outside the UAE. We rely on their contractual data protection commitments.</p>
 <h2>Your rights</h2><p>Under the UAE Personal Data Protection Law (Federal Decree-Law No. 45 of 2021) and, where it applies to you, other data protection laws, you can request access to, correction or deletion of your data, restrict or object to processing, and receive your data in a portable format. Contact us at <a href="mailto:{EMAIL}">{EMAIL}</a>.</p>
 <h2>Changes</h2><p>We update this policy when our website or services change. The date at the top shows the latest version.</p>""")
@@ -1233,7 +1251,7 @@ def main():
     llms = (f"# {BRAND}\n\n> Dubai-based AI agency (SDA SERVICES L.L.C-FZ, Meydan, Dubai, UAE). SDA stands for Software, Development, Applications & AI Services. "
             "We build AI agents, workflow automation, custom web and mobile apps, data management and SAP integration for companies in the UAE and GCC. "
             "Every project starts with a free pilot; prices are fixed, in AED, with no per-user fees. Languages: English and Arabic.\n\n"
-            f"Contact: {EMAIL} · {abs_url('contact.html')}\n\n"
+            f"Contact: {EMAIL}{(' · WhatsApp ' + WHATSAPP_DISPLAY) if WHATSAPP else ''} · {abs_url('contact.html')}\n\n"
             "## Services\n" + sec([(x["name"], abs_url(f"services/{x['slug']}.html"), SEO[x["slug"]][1]) for x in SERVICES]) +
             "\n## Solutions\n" + sec([(x["name"], abs_url(f"solutions/{x['slug']}.html"), x["meta"]) for x in LP_BY_KIND["solutions"]]) +
             "\n## Industries\n" + sec([(x["name"], abs_url(f"industries/{x['slug']}.html"), x["meta"]) for x in LP_BY_KIND["industries"]]) +

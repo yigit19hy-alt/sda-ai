@@ -844,5 +844,13 @@ footer .logo-svg{height:46px}
 .info-list a{color:var(--ink-2)}
 .btn-wa{background:#1FA855;color:#fff;border-color:#1FA855}
 .btn-wa:hover{background:#178C46}
+/* Floating WhatsApp button (all pages) */
+.wa-float{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));z-index:45;display:inline-flex;align-items:center;gap:8px;padding:12px 18px 12px 14px;border-radius:999px;background:#1FA855;color:#fff;font-weight:600;font-size:15px;line-height:1;text-decoration:none;box-shadow:0 12px 28px -10px rgba(16,90,48,.6),0 2px 6px rgba(16,90,48,.25);transition:transform .2s var(--ease-out),background .2s ease}
+.wa-float:hover{background:#178C46;transform:translateY(-2px)}
+.wa-float:focus-visible{outline:3px solid color-mix(in srgb,#1FA855 45%,transparent);outline-offset:3px}
+.wa-float svg{width:22px;height:22px;flex:none}
+@media (max-width:640px){.wa-float{padding:14px;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom))}.wa-float span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+@media (prefers-reduced-motion:reduce){.wa-float{transition:none}.wa-float:hover{transform:none}}
+@media print{.wa-float{display:none}}
 .foot-social{display:flex;gap:12px;flex-wrap:wrap}
 .kicker .sp{width:12px;height:12px;top:0;margin:0}

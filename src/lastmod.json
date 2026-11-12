@@ -1,222 +1,222 @@
 {
  "404.html": {
-  "date": "2026-11-11",
-  "hash": "42bd7e3f1c71"
+  "date": "2026-11-12",
+  "hash": "2bac8cb2b121"
  },
  "about.html": {
-  "date": "2026-11-11",
-  "hash": "179fb9f8613f"
+  "date": "2026-11-12",
+  "hash": "8503a2c7fc4e"
  },
  "contact.html": {
-  "date": "2026-11-11",
-  "hash": "5cd088ff5e8c"
+  "date": "2026-11-12",
+  "hash": "b7fd7743b4b8"
  },
  "index.html": {
   "date": "2026-11-12",
-  "hash": "9cabb12051ef"
+  "hash": "47eddd0b4d53"
  },
  "industries/construction.html": {
   "date": "2026-11-12",
-  "hash": "657651221e09"
+  "hash": "30bc337a6d1c"
  },
  "industries/energy.html": {
   "date": "2026-11-12",
-  "hash": "0a2bfdbcc727"
+  "hash": "3dabf359ff60"
  },
  "industries/index.html": {
   "date": "2026-11-12",
-  "hash": "c5e958c9363e"
+  "hash": "874c72db6ac1"
  },
  "industries/logistics.html": {
   "date": "2026-11-12",
-  "hash": "45fac17d7d36"
+  "hash": "be0c44e1aefa"
  },
  "industries/manufacturing.html": {
   "date": "2026-11-12",
-  "hash": "bdd4b25e6e02"
+  "hash": "ac0f3c67238f"
  },
  "industries/professional-services.html": {
   "date": "2026-11-12",
-  "hash": "c764ac1b208c"
+  "hash": "517f9eeaa3e5"
  },
  "industries/real-estate.html": {
   "date": "2026-11-12",
-  "hash": "b4499b8fef4e"
+  "hash": "cf001a0ef71f"
  },
  "insights/ai-agent-cost-uae.html": {
   "date": "2026-11-12",
-  "hash": "dfdc07e814bc"
+  "hash": "1901451beb56"
  },
  "insights/ai-agent-vs-chatbot.html": {
   "date": "2026-11-12",
-  "hash": "a86ec81c8881"
+  "hash": "4c977f2e1012"
  },
  "insights/ai-data-protection-gcc.html": {
   "date": "2026-11-12",
-  "hash": "20e239ddc471"
+  "hash": "e2e824b47296"
  },
  "insights/ai-invoice-processing-sap.html": {
   "date": "2026-11-12",
-  "hash": "d6de69cb83c7"
+  "hash": "43f694e8f4b3"
  },
  "insights/ai-real-estate-dubai.html": {
   "date": "2026-11-12",
-  "hash": "cecdfc331834"
+  "hash": "efe5e40c50c7"
  },
  "insights/arabic-ai-chatbot-guide.html": {
   "date": "2026-11-12",
-  "hash": "b18f6d8a16ca"
+  "hash": "3a2676d9de82"
  },
  "insights/choose-ai-automation-agency-dubai.html": {
   "date": "2026-11-12",
-  "hash": "c22713df0037"
+  "hash": "c7a420789066"
  },
  "insights/index.html": {
   "date": "2026-11-12",
-  "hash": "a62f10cb80ab"
+  "hash": "e480ea1b7dd0"
  },
  "insights/uae-e-invoicing-2027.html": {
   "date": "2026-11-12",
-  "hash": "a14c6899676b"
+  "hash": "1059064772e3"
  },
  "insights/whatsapp-ai-chatbot-business-uae.html": {
   "date": "2026-11-12",
-  "hash": "79fc3138a9ae"
+  "hash": "2e743e69e151"
  },
  "insights/zatca-e-invoicing-phase-2.html": {
   "date": "2026-11-12",
-  "hash": "1199efc039bb"
+  "hash": "9629026417aa"
  },
  "legal-notice.html": {
-  "date": "2026-11-11",
-  "hash": "e873da961d79"
+  "date": "2026-11-12",
+  "hash": "37588385c9ac"
  },
  "locations/abu-dhabi.html": {
   "date": "2026-11-12",
-  "hash": "ff35f8ce1194"
+  "hash": "999b39fe4aa0"
  },
  "locations/bahrain.html": {
   "date": "2026-11-12",
-  "hash": "63d15a83fa29"
+  "hash": "2971aee11cdc"
  },
  "locations/dubai.html": {
   "date": "2026-11-12",
-  "hash": "2c7245671e27"
+  "hash": "6a3af005b42e"
  },
  "locations/index.html": {
   "date": "2026-11-12",
-  "hash": "2b05b3837f59"
+  "hash": "a116670f10fc"
  },
  "locations/kuwait.html": {
   "date": "2026-11-12",
-  "hash": "a4d0ae176b24"
+  "hash": "515e17dc7570"
  },
  "locations/oman.html": {
   "date": "2026-11-12",
-  "hash": "a71a12836f2a"
+  "hash": "60ebfdc8323c"
  },
  "locations/qatar.html": {
   "date": "2026-11-12",
-  "hash": "5efa77b1236a"
+  "hash": "bea70d8e830a"
  },
  "locations/saudi-arabia.html": {
   "date": "2026-11-12",
-  "hash": "85a5629eba48"
+  "hash": "1cb98c4c65f7"
  },
  "pricing.html": {
-  "date": "2026-11-11",
-  "hash": "0316e999ae6b"
+  "date": "2026-11-12",
+  "hash": "23cbfaa978bb"
  },
  "privacy.html": {
-  "date": "2026-11-11",
-  "hash": "9f6be9337e0b"
+  "date": "2026-11-12",
+  "hash": "c4f5506e322b"
  },
  "services/ai-agents.html": {
   "date": "2026-11-12",
-  "hash": "9a66c3236155"
+  "hash": "70e602016f84"
  },
  "services/data-management.html": {
   "date": "2026-11-12",
-  "hash": "77570ebb1c4e"
+  "hash": "687cf3d6af96"
  },
  "services/index.html": {
-  "date": "2026-11-11",
-  "hash": "83f91e3867b4"
+  "date": "2026-11-12",
+  "hash": "944579e16f89"
  },
  "services/mobile-apps.html": {
   "date": "2026-11-12",
-  "hash": "bdf55b81e084"
+  "hash": "d30952e59e3d"
  },
  "services/sap-integration.html": {
   "date": "2026-11-12",
-  "hash": "6afa42a3c3ef"
+  "hash": "90d812ad9019"
  },
  "services/web-applications.html": {
   "date": "2026-11-12",
-  "hash": "c2fca46fe1ff"
+  "hash": "dd272be80454"
  },
  "services/workflow-automation.html": {
   "date": "2026-11-12",
-  "hash": "28f327c0ca01"
+  "hash": "0489ab4047f6"
  },
  "solutions/ai-document-processing.html": {
   "date": "2026-11-12",
-  "hash": "0af689737cfd"
+  "hash": "ef1ac4fc97f1"
  },
  "solutions/arabic-ai-chatbot.html": {
   "date": "2026-11-12",
-  "hash": "b45fd7aeb73a"
+  "hash": "5d50b358026e"
  },
  "solutions/index.html": {
   "date": "2026-11-12",
-  "hash": "50536c1076d8"
+  "hash": "fe118fe89a5a"
  },
  "solutions/whatsapp-ai-chatbot.html": {
   "date": "2026-11-12",
-  "hash": "abb419e7a7b0"
+  "hash": "5ee86d19613a"
  },
  "thanks.html": {
-  "date": "2026-11-11",
-  "hash": "040ee572e605"
+  "date": "2026-11-12",
+  "hash": "3ef97c401e30"
  },
  "use-cases/construction.html": {
   "date": "2026-11-12",
-  "hash": "da084ffcf809"
+  "hash": "2713ea675aa0"
  },
  "use-cases/dashboard.html": {
   "date": "2026-11-12",
-  "hash": "822027e728f2"
+  "hash": "7587beb61533"
  },
  "use-cases/facility-management.html": {
   "date": "2026-11-12",
-  "hash": "26f32326e0b4"
+  "hash": "3050a3a2120b"
  },
  "use-cases/field-service.html": {
   "date": "2026-11-12",
-  "hash": "7b6d25bfbaa4"
+  "hash": "94d33c497487"
  },
  "use-cases/freight-forwarding.html": {
   "date": "2026-11-12",
-  "hash": "7a5d7980d879"
+  "hash": "96e86fb04128"
  },
  "use-cases/hr-tool.html": {
   "date": "2026-11-12",
-  "hash": "0418d45a3f8e"
+  "hash": "d7c130c7941d"
  },
  "use-cases/index.html": {
-  "date": "2026-11-11",
-  "hash": "c8461b6f26ab"
+  "date": "2026-11-12",
+  "hash": "740279569e40"
  },
  "use-cases/real-estate.html": {
   "date": "2026-11-12",
-  "hash": "48c63e10011f"
+  "hash": "3fef034583c9"
  },
  "use-cases/vendor-management.html": {
   "date": "2026-11-12",
-  "hash": "628a75f7bd3c"
+  "hash": "5cbd46961990"
  },
  "use-cases/workflow-management.html": {
   "date": "2026-11-12",
-  "hash": "928ab086c2a8"
+  "hash": "9762c011fb52"
  }
 }
