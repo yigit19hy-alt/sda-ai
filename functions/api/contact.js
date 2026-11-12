@@ -1,9 +1,42 @@
 // Cloudflare Pages Function: POST /api/contact
-// Stores each request in KV (binding CONTACTS) and, if configured, emails it via Resend.
-// Configure in Cloudflare: Pages project > Settings > Bindings (KV namespace "CONTACTS")
-// and optional variables RESEND_API_KEY, CONTACT_TO (your inbox), CONTACT_FROM (verified sender).
+// Every request is sent to TO (below). Delivery, in this order:
+//   1. Google Workspace via Apps Script web app (tools/contact-mailer.gs):
+//      Pages project > Settings > Variables and secrets: MAIL_WEBHOOK (web app URL), MAIL_SECRET (secret)
+//   2. Resend (optional fallback): RESEND_API_KEY (secret), CONTACT_FROM (verified sender, optional)
+// Optional: KV binding "CONTACTS" keeps a copy of every request.
+const TO = 'yigit@sda-services.ai';
+
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
 const clean = (v, max) => String(v || '').trim().slice(0, max);
+
+async function viaAppsScript(env, entry) {
+  if (!env.MAIL_WEBHOOK) return false;
+  try {
+    const r = await fetch(env.MAIL_WEBHOOK, {
+      method: 'POST', redirect: 'follow',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ secret: env.MAIL_SECRET || '', ...entry }),
+    });
+    const j = await r.json().catch(() => ({}));
+    return r.ok && j.ok === true;
+  } catch { return false; }
+}
+
+async function viaResend(env, entry) {
+  if (!env.RESEND_API_KEY) return false;
+  try {
+    const r = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: env.CONTACT_FROM || 'SDA Website <onboarding@resend.dev>', to: [TO], reply_to: entry.email,
+        subject: `New request: ${entry.topic || 'Website'} – ${entry.name}`,
+        text: `Name: ${entry.name}\nEmail: ${entry.email}\nCompany: ${entry.company}\nTopic: ${entry.topic}\n\n${entry.message}`,
+      }),
+    });
+    return r.ok;
+  } catch { return false; }
+}
 
 export async function onRequestPost({ request, env }) {
   let d = {};
@@ -21,20 +54,10 @@ export async function onRequestPost({ request, env }) {
   if (!entry.name) return json({ ok: false, error: 'Please add your name.' }, 400);
   if (!/^\S+@\S+\.\S+$/.test(entry.email)) return json({ ok: false, error: 'Please enter a valid email.' }, 400);
 
-  let stored = false, mailed = false;
+  let stored = false;
   if (env.CONTACTS) { await env.CONTACTS.put(`contact:${entry.at}:${crypto.randomUUID()}`, JSON.stringify(entry)); stored = true; }
-  if (env.RESEND_API_KEY && env.CONTACT_TO) {
-    const r = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from: env.CONTACT_FROM || 'SDA Website <onboarding@resend.dev>', to: [env.CONTACT_TO], reply_to: entry.email,
-        subject: `New request: ${entry.topic || 'Website'} – ${entry.name}`,
-        text: `Name: ${entry.name}\nEmail: ${entry.email}\nCompany: ${entry.company}\nTopic: ${entry.topic}\n\n${entry.message}`,
-      }),
-    });
-    mailed = r.ok;
-  }
+  const mailed = (await viaAppsScript(env, entry)) || (await viaResend(env, entry));
+
   if (!stored && !mailed) return json({ ok: false, error: 'The contact form is not configured yet.' }, 503);
   return json({ ok: true });
 }

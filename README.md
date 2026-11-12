@@ -32,12 +32,16 @@ pip install fonttools brotli && python3 tools/make_logo.py && node tools/render_
 
 ### Contact form
 
-The form posts to `/api/contact` (`functions/api/contact.js`). To receive requests, in the Pages project open **Settings**:
+The form posts to `/api/contact` (`functions/api/contact.js`). Every request goes to **yigit@sda-services.ai** (`TO` in `contact.js`).
 
-- **Bindings** → add a **KV namespace** binding named `CONTACTS` (stores every request), and/or
-- **Variables and secrets** → `RESEND_API_KEY` (secret, from resend.com), `CONTACT_TO` (your inbox), optionally `CONTACT_FROM` (a verified sender address) to get each request by email.
+Delivery through the Google Workspace mailbox (free):
 
-Without either, the form tells visitors to email you directly.
+1. Set up `tools/contact-mailer.gs` as a Google Apps Script web app (steps at the top of that file).
+2. In the Pages project open **Settings → Variables and secrets** and add `MAIL_WEBHOOK` (web app URL) and `MAIL_SECRET` (secret, same value as `SECRET` in the script). Redeploy.
+
+Optional: `RESEND_API_KEY` (+ `CONTACT_FROM`) as a fallback sender, and a **KV namespace** binding `CONTACTS` to keep a copy of every request.
+
+Without any of these, the form tells visitors to email yigit@sda-services.ai directly.
 
 ## Before launch
 
@@ -46,7 +50,7 @@ Without either, the form tells visitors to email you directly.
 - [x] Privacy policy and legal notice filled in (`privacy()` and `legal()` in `build.py`). Have them reviewed.
 - [ ] Optional values at the top of `build.py`: `PHONE`, `WHATSAPP`, `SOCIAL`, `LICENSE_NO`. Empty values are left out of the pages automatically.
 - [ ] After switching on Cloudflare Web Analytics, set `ANALYTICS = True` so the privacy policy mentions it.
-- [ ] Configure the contact form (see above).
+- [ ] Configure the contact form mailer (see above).
 - Rebuild with `python3 build.py`, commit and push.
 
 ## Content
