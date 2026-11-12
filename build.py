@@ -19,7 +19,8 @@ WHATSAPP_TEXT = "Hello SDA AI Services, I would like to talk about a project."  
 # Google Calendar booking page (yigit@sda-services.ai, "Free 30-minute discovery call", Mon–Fri 9–17 Dubai time)
 BOOKING_URL = "https://calendar.google.com/calendar/appointments/schedules/AcZssZ0NwR_cV6fana6F9QDSuWfoKAGoRw3_kfl0jSYuho7E-LeVSI1pGvLhfV6qC5lEAHz7iyCo_OBK"
 SOCIAL = []       # profile URLs, e.g. ["https://www.linkedin.com/company/sda-ai-services"] (schema sameAs + footer)
-LICENSE_NO = ""   # trade licence number, shown in the legal notice
+LICENSE_NO = "2204440.01"  # trade licence number (legal notice, footer, structured data)
+FORMATION_NO = "2204440"   # company formation number (legal notice, structured data)
 ANALYTICS = True  # Cloudflare Web Analytics is on (automatic setup, visitors outside the EU); adds the note to the privacy policy
 HOURS = "Monday to Friday, 9:00 to 17:00 (Dubai time, GST)"
 # Search engine ownership tags (meta tag method; the page must stay online for verification to remain valid)
@@ -38,6 +39,7 @@ WA_URL = f"https://wa.me/{WHATSAPP}?text={_quote(WHATSAPP_TEXT)}" if WHATSAPP el
 WA_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6c-4.85 0-8.7 3.45-8.7 7.8 0 2.3 1.05 4.35 2.75 5.8l-.75 3.2 3.5-1.75c1 .35 2.05.55 3.2.55 4.85 0 8.7-3.45 8.7-7.8S16.85 3.6 12 3.6Z" '
            'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="8.4" cy="11.4" r="1.1" fill="currentColor"/>'
            '<circle cx="12" cy="11.4" r="1.1" fill="currentColor"/><circle cx="15.6" cy="11.4" r="1.1" fill="currentColor"/></svg>')
+LIC_NOTE = f" · Trade licence no. {LICENSE_NO}" if LICENSE_NO else ""
 CHECK_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4.5 10.5 3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 
 e = html.escape
@@ -452,7 +454,7 @@ def footer(r, demo=False):
     return f"""<footer>
   <div class="wrap">
     <div class="foot glass">
-      <div>{logo(r)}<p>AI software, web and app development for companies that want working systems in production. Based in Dubai, serving clients across the UAE and GCC.</p><p class="note">SDA SERVICES L.L.C-FZ · Meydan Grandstand, 6th floor, Meydan Road, Nad Al Sheba, Dubai, UAE</p></div>
+      <div>{logo(r)}<p>AI software, web and app development for companies that want working systems in production. Based in Dubai, serving clients across the UAE and GCC.</p><p class="note">SDA SERVICES L.L.C-FZ{LIC_NOTE} · Meydan Grandstand, 6th floor, Meydan Road, Nad Al Sheba, Dubai, UAE</p></div>
       <div><h4>Services</h4><ul>{svc}</ul></div>
       <div><h4>Industries</h4><ul>{inds}</ul></div>
       <div><h4>Regions</h4><ul>{regs}</ul></div>
@@ -497,6 +499,9 @@ ORG_LD = {"@context": "https://schema.org", "@type": "ProfessionalService", "@id
           "knowsAbout": ["AI agents", "Workflow automation", "Custom web applications", "Mobile apps", "Data management", "SAP integration"]}
 if PHONE:
     ORG_LD["telephone"] = PHONE; ORG_LD["contactPoint"][0]["telephone"] = PHONE
+if LICENSE_NO or FORMATION_NO:
+    ORG_LD["identifier"] = ([{"@type": "PropertyValue", "propertyID": "Trade licence number", "value": LICENSE_NO}] if LICENSE_NO else []) + \
+                           ([{"@type": "PropertyValue", "propertyID": "Formation number", "value": FORMATION_NO}] if FORMATION_NO else [])
 if SOCIAL:
     ORG_LD["sameAs"] = SOCIAL
 WEBSITE_LD = {"@context": "https://schema.org", "@type": "WebSite", "@id": SITE_URL + "/#website", "name": BRAND, "url": SITE_URL + "/",
@@ -1188,7 +1193,8 @@ def privacy():
 <h2>Changes</h2><p>We update this policy when our website or services change. The date at the top shows the latest version.</p>""")
 
 def legal():
-    reg = f"<h2>Registration</h2><p>Trade licence number: {e(LICENSE_NO)}</p>" if LICENSE_NO else ""
+    reg_lines = ([f"Trade licence number: {e(LICENSE_NO)}"] if LICENSE_NO else []) + ([f"Formation number: {e(FORMATION_NO)}"] if FORMATION_NO else [])
+    reg = f"<h2>Registration</h2><p>{'<br>'.join(reg_lines)}</p>" if reg_lines else ""
     tel = f'<br>Phone: <a href="tel:{PHONE.replace(" ", "")}">{e(PHONE)}</a>' if PHONE else ""
     return simple_page("legal-notice.html", "Legal notice", "Company information for SDA AI Services (SDA SERVICES L.L.C-FZ, Dubai, UAE).", "Legal notice", f"""
 <h2>Company</h2><p>SDA SERVICES L.L.C-FZ<br>Trading as {BRAND} (Software, Development, Applications &amp; AI Services)<br>Meydan Grandstand, 6th floor, Meydan Road<br>Nad Al Sheba, Dubai<br>United Arab Emirates</p>
@@ -1268,7 +1274,8 @@ def main():
     llms = (f"# {BRAND}\n\n> Dubai-based AI agency (SDA SERVICES L.L.C-FZ, Meydan, Dubai, UAE). SDA stands for Software, Development, Applications & AI Services. "
             "We build AI agents, workflow automation, custom web and mobile apps, data management and SAP integration for companies in the UAE and GCC. "
             "Every project starts with a free pilot; prices are fixed, in AED, with no per-user fees. Languages: English and Arabic.\n\n"
-            f"Contact: {EMAIL}{(' · WhatsApp ' + WHATSAPP_DISPLAY) if WHATSAPP else ''} · {abs_url('contact.html')}\n\n"
+            f"Contact: {EMAIL}{(' · WhatsApp ' + WHATSAPP_DISPLAY) if WHATSAPP else ''} · {abs_url('contact.html')}\n"
+            + (f"Company: SDA SERVICES L.L.C-FZ, trade licence no. {LICENSE_NO}, formation no. {FORMATION_NO}\n" if LICENSE_NO else "") + "\n"
             "## Services\n" + sec([(x["name"], abs_url(f"services/{x['slug']}.html"), SEO[x["slug"]][1]) for x in SERVICES]) +
             "\n## Solutions\n" + sec([(x["name"], abs_url(f"solutions/{x['slug']}.html"), x["meta"]) for x in LP_BY_KIND["solutions"]]) +
             "\n## Industries\n" + sec([(x["name"], abs_url(f"industries/{x['slug']}.html"), x["meta"]) for x in LP_BY_KIND["industries"]]) +

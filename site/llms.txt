@@ -3,6 +3,7 @@
 > Dubai-based AI agency (SDA SERVICES L.L.C-FZ, Meydan, Dubai, UAE). SDA stands for Software, Development, Applications & AI Services. We build AI agents, workflow automation, custom web and mobile apps, data management and SAP integration for companies in the UAE and GCC. Every project starts with a free pilot; prices are fixed, in AED, with no per-user fees. Languages: English and Arabic.
 
 Contact: yigit@sda-services.ai · WhatsApp +971 54 237 7342 · https://sda-services.ai/contact
+Company: SDA SERVICES L.L.C-FZ, trade licence no. 2204440.01, formation no. 2204440
 
 ## Services
 - [AI agents & assistants](https://sda-services.ai/services/ai-agents): Custom AI agents and chatbots for UAE businesses: answers from your documents, actions in your systems, on WhatsApp, web and voice. Free pilot.
