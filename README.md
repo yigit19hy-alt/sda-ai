@@ -50,7 +50,7 @@ Without any of these, the form tells visitors to email yigit@sda-services.ai dir
 - [x] Privacy policy and legal notice filled in (`privacy()` and `legal()` in `build.py`). Have them reviewed.
 - [ ] Optional values at the top of `build.py`: `PHONE`, `WHATSAPP`, `SOCIAL`, `LICENSE_NO`. Empty values are left out of the pages automatically.
 - [ ] After switching on Cloudflare Web Analytics, set `ANALYTICS = True` so the privacy policy mentions it.
-- [ ] Configure the contact form mailer (see above).
+- [x] Contact form mailer configured (Apps Script "SDA Website Kontaktformular" in yigit@sda-services.ai, MAIL_WEBHOOK + MAIL_SECRET in Cloudflare).
 - Rebuild with `python3 build.py`, commit and push.
 
 ## Content
