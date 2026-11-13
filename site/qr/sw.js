@@ -1,5 +1,5 @@
 /* Offline cache for the QR card (/qr/): opens instantly at events, even without signal. */
-var CACHE = "sda-qr-v1";
+var CACHE = "sda-qr-v2";
 var FILES = ["/qr/", "/qr/manifest.webmanifest", "/assets/fonts/geist-latin.woff2", "/assets/brand/apple-touch-icon.png?v=2", "/assets/sda-ai-services.vcf"];
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(FILES); }).then(function () { return self.skipWaiting(); }));
