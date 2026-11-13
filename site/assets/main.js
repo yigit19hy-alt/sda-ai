@@ -113,7 +113,7 @@
     btn.disabled = true; n.className = 'note'; n.textContent = 'Sending…';
     fetch(form.getAttribute('action') || '/api/contact', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)})
       .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ if(!r.ok || !j.ok) throw new Error(j.error || 'failed'); }); })
-      .then(function(){ form.reset(); n.className = 'note done'; n.textContent = 'Thanks, '+first+'. We received your request and reply within one business day.'; })
+      .then(function(){ try{ document.dispatchEvent(new CustomEvent('site:lead',{detail:'form'})); }catch(x){} form.reset(); n.className = 'note done'; n.textContent = 'Thanks, '+first+'. We received your request and reply within one business day.'; })
       .catch(function(){ n.className = 'note err'; n.textContent = 'Sending did not work just now. Please email us at '+form.dataset.mail+' and we will reply within one business day.'; })
       .then(function(){ btn.disabled = false; });
   }); }

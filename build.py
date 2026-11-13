@@ -21,6 +21,7 @@ BOOKING_URL = "https://calendar.google.com/calendar/appointments/schedules/AcZss
 SOCIAL = []       # profile URLs, e.g. ["https://www.linkedin.com/company/sda-ai-services"] (schema sameAs + footer)
 LICENSE_NO = "2204440.01"  # trade licence number (legal notice, footer, structured data)
 FORMATION_NO = "2204440"   # company formation number (legal notice, structured data)
+ADS_PRIVACY = False  # set True when Google Ads tracking is switched on in src/assets/consent.js (adds the privacy section and cookie note)
 ANALYTICS = True  # Cloudflare Web Analytics is on (automatic setup, visitors outside the EU); adds the note to the privacy policy
 HOURS = "Monday to Friday, 9:00 to 17:00 (Dubai time, GST)"
 # Search engine ownership tags (meta tag method; the page must stay online for verification to remain valid)
@@ -430,10 +431,10 @@ def nav(r, active):
       <li><a href="{r}pricing.html"{cur("pricing")}>Pricing</a></li>
       <li><a href="{r}insights/index.html"{cur("insights")}>Insights</a></li>
       <li><a href="{r}contact.html"{cur("contact")}>Contact</a></li>
-      <li class="m-cta"><a class="btn btn-primary" href="{r}contact.html">Start a project <span class="arr">→</span></a></li>
+      <li class="m-cta"><a class="btn btn-primary" href="{r}{PILOT_URL}">Free pilot <span class="arr">→</span></a></li>
     </ul>
     <div class="nav-cta">
-      <a class="btn btn-primary btn-sm btn-shine" href="{r}contact.html">Start a project <span class="arr">→</span></a>
+      <a class="btn btn-primary btn-sm btn-shine" href="{r}{PILOT_URL}">Free pilot <span class="arr">→</span></a>
       <button class="burger" type="button" aria-label="Open menu" aria-expanded="false">{BURGER}</button>
     </div>
   </div>
@@ -463,11 +464,17 @@ def footer(r, demo=False):
     <div class="foot-base"><span>© <span id="yr">2026</span> {BRAND}</span><span><a href="{r}privacy.html">Privacy policy</a> · <a href="{r}legal-notice.html">Legal notice</a></span></div>
   </div>
 </footer>{wa_float}
-<script src="/assets/main.js?v={ASSET_V}"></script>{demo_js}"""
+<script src="/assets/main.js?v={ASSET_V}"></script>
+<script src="/assets/consent.js?v={ASSET_V}" defer></script>{demo_js}"""
 
-def cta_band(r, h="Ready to put AI to work?", p="Tell us about your process. We reply within one business day with first ideas and a proposed next step."):
+PILOT_URL = "contact.html#contact-form"
+
+def pilot_btn(r, cls="btn btn-primary", label="Request a free pilot"):
+    return f'<a class="{cls}" href="{r}{PILOT_URL}">{label} <span class="arr">→</span></a>'
+
+def cta_band(r, h="Ready to put AI to work?", p="Tell us about your process. Every project starts with a free pilot you can test with your own examples, and we reply within one business day."):
     return f"""<section class="block" style="padding-top:0"><div class="wrap"><div class="cta-card glass-strong"><h2>{h}</h2><p>{p}</p>
-<div class="cta-row">{book_btn(r)}<a class="btn btn-glass" href="{r}use-cases/index.html">Try the live demos</a></div></div></div></section>"""
+<div class="cta-row">{pilot_btn(r)}{book_btn(r, "btn btn-glass")}</div></div></div></section>"""
 
 def crumbs(r, items):
     home_ic = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 9 10 3.5 16.5 9v7.5h-4.5V12H8v4.5H3.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>'
@@ -570,7 +577,7 @@ PROCESS = """<div class="steps">
 </div>"""
 
 def contact_block(heading_tag="h2"):
-    opts = "".join(f"<option>{e(s['name'])}</option>" for s in SERVICES) + "<option>Not sure yet</option>"
+    opts = "<option>Free pilot project</option>" + "".join(f"<option>{e(s['name'])}</option>" for s in SERVICES) + "<option>Not sure yet</option>"
     wa = f'<a class="btn btn-wa btn-sm" href="{WA_URL}" target="_blank" rel="noopener">Chat on WhatsApp</a>' if WHATSAPP else ""
     tel = f'\n      <li><b>Phone</b><a href="tel:{PHONE.replace(" ", "")}">{e(PHONE)}</a></li>' if PHONE else ""
     if WHATSAPP: tel += f'\n      <li><b>WhatsApp</b><a href="{WA_URL}" target="_blank" rel="noopener">{e(WHATSAPP_DISPLAY)}</a></li>'
@@ -587,7 +594,7 @@ def contact_block(heading_tag="h2"):
       <li><b>Response time</b>Within one business day, with first ideas and a proposed next step</li>{tel}
     </ul>
   </div>
-  <form class="lead glass-strong" method="POST" action="/api/contact" novalidate data-mail="{EMAIL}">
+  <form class="lead glass-strong" id="contact-form" method="POST" action="/api/contact" novalidate data-mail="{EMAIL}">
     <p hidden><label>Leave this empty<input name="company-website" tabindex="-1" autocomplete="off"></label></p>
     <div class="row2">
       <label for="f-name">Name<input id="f-name" name="name" autocomplete="name" placeholder="Jane Doe"></label>
@@ -657,7 +664,7 @@ def home():
   <p class="kicker rise">{SP}AI agency in Dubai for the UAE &amp; GCC</p>
   <h1 class="rise">AI that takes <span class="soft">manual work</span> off your team{SPG()}</h1>
   <p class="lede rise d1">From Dubai, SDA AI Services designs, builds and runs <b>AI agents, automation and custom software</b> for companies across the UAE and GCC that want working systems in production, not slide decks.</p>
-  <div class="cta-row rise d2">{book_btn(r)}<a class="btn btn-glass" href="use-cases/index.html">Try the live demos</a></div>
+  <div class="cta-row rise d2">{pilot_btn(r)}{book_btn(r, "btn btn-glass")}</div>
   <ul class="hero-trust rise d2" aria-label="Why it is low risk"><li>{CHECK_ICON}<span><b>Free pilot</b>, no obligation</span></li><li>{CHECK_ICON}<span>Fixed prices</span></li><li>{CHECK_ICON}<span>Reply within one business day</span></li></ul>
   <div class="ask rise d3" id="prompt">
     <form class="ask-bar" id="ask-form" role="search" aria-label="Describe what you want to automate">
@@ -682,6 +689,8 @@ def home():
   <div class="sec-head"><h2>Try it before you talk to us</h2><p>{["Four","Five","Six","Seven","Eight","Nine","Ten"][len(USE_CASES)-4] if 4 <= len(USE_CASES) <= 10 else len(USE_CASES)} working demos of the kind of software we build. Pick one, switch between the roles and click through it: everything runs in your browser on example data.</p></div>
   {uc_switch(r)}
 </div></section>
+
+{pilot_section(r)}
 
 <section class="block" id="industries" style="padding-top:20px"><div class="wrap">{industries_block(r)}</div></section>
 
@@ -708,7 +717,7 @@ def home():
   <div class="sec-head"><h2>Insights for UAE and GCC companies</h2><p>Practical guides on AI costs, e-invoicing, data protection and automation. <a class="link" href="insights/index.html">All insights <span class="arr">→</span></a></p></div>
   <div class="posts">{"".join(f'<a class="glass" href="insights/{x["slug"]}.html"><small>Guide</small><b>{e(x["h1"])}</b><span>{e(x["lede"])}</span></a>' for x in POSTS[:4])}</div>
 </div></section>
-<section class="block" id="contact" style="padding-top:20px"><div class="wrap">{contact_block()}</div></section>"""
+{cases_block(r)}<section class="block" id="contact" style="padding-top:20px"><div class="wrap">{contact_block()}</div></section>"""
     video_ld = {"@context": "https://schema.org", "@type": "VideoObject", "name": "SDA AI Services in 35 seconds",
                 "description": "AI agents, workflow automation and custom software for companies in the UAE and GCC, built by SDA AI Services in Dubai.",
                 "thumbnailUrl": SITE_URL + "/assets/media/sda-ai-services.jpg", "contentUrl": SITE_URL + "/assets/media/sda-ai-services.mp4",
@@ -789,7 +798,7 @@ def uc_hub():
     body = page_hero(r, [("Home", "index.html"), ("Use cases", None)], "See what AI software can do for your team",
                      f"{len(USE_CASES)} interactive demos of the software we build. Each runs in your browser on example data, and each can be adapted to your processes and connected to your systems.") + f"""
 <section class="block" style="padding-top:20px"><div class="wrap">{uc_switch(r)}</div></section>
-{cta_band(r, "Need something similar?", "We adapt these demos to your data, processes and systems, usually starting with a two-week prototype.")}"""
+{cta_band(r, "Need something similar?", "We adapt these demos to your data, processes and systems, starting with a free pilot you can test at no cost.")}"""
     t, m = SEO["use-cases"]
     return page(r, "use-cases/", t.format(n=len(USE_CASES)), m.format(n=len(USE_CASES)),
                 "use-cases", body, [crumb_ld([("Home", ""), ("Use cases", "use-cases/")])], demo=True)
@@ -827,7 +836,7 @@ def uc_page(u):
   <div class="sec-head left" style="margin-bottom:28px"><h2>More demos</h2></div>
   <div class="related" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">{others}</div>
 </div></section>
-{cta_band(r, e(u.get('cta') or f"Want this for your {u['label'].lower()} team?"), "We adapt the demo to your data and systems, usually starting with a two-week prototype.")}"""
+{cta_band(r, e(u.get('cta') or f"Want this for your {u['label'].lower()} team?"), "We adapt the demo to your data and systems, starting with a free pilot you can test at no cost.")}"""
     ld = [crumb_ld([("Home", ""), ("Use cases", "use-cases/"), (u["name"], path)]),
           {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": f"{u['name']} demo", "applicationCategory": "BusinessApplication",
            "operatingSystem": "Web", "description": u["meta"], "url": abs_url(path), "creator": {"@id": ORG_ID},
@@ -861,6 +870,36 @@ PRICE_FAQ = [
   ("Are prices including VAT?", "No. All prices are in AED and exclude 5 % UAE VAT."),
   ("Do you offer Arabic?", "Yes. Interfaces and AI assistants can be built in English and Arabic, including right-to-left layouts."),
 ]
+PILOT_STEPS = """<div class="steps s4">
+  <div class="step glass"><div class="step-dot">1</div><h3>Discovery call</h3><div class="dur">Free · 30 minutes</div><p>We find the task that costs your team the most time and what a solution would bring.</p></div>
+  <div class="step glass"><div class="step-dot">2</div><h3>Free pilot</h3><div class="dur">AED 0 · no obligation</div><p>A working pilot for one use case. You test it with your own examples and ask for as many changes as you need.</p></div>
+  <div class="step glass"><div class="step-dot">3</div><h3>Build</h3><div class="dur">Fixed price · only after your OK</div><p>Once you are convinced, we build the full solution at the agreed fixed price and connect your systems.</p></div>
+  <div class="step glass"><div class="step-dot">4</div><h3>Operate</h3><div class="dur">From AED 1,100 / month</div><p>Hosting, monitoring, updates and improvements for a fixed monthly fee per company.</p></div>
+</div>"""
+
+def pilot_section(r, top=20):
+    wa = f'<a class="btn btn-wa" href="{WA_URL}" target="_blank" rel="noopener">Chat on WhatsApp</a>' if WHATSAPP else ""
+    return f"""<section class="block" id="pilot" style="padding-top:{top}px"><div class="wrap">
+  <div class="sec-head"><h2>Free pilot: see it working before you pay</h2><p>We build a working first version for one use case with your own examples. You test it, ask for changes, and only pay once you say yes. <a class="link" href="{r}pricing.html">How the pilot works <span class="arr">→</span></a></p></div>
+  {PILOT_STEPS}
+  <div class="cta-row" style="justify-content:center;margin-top:28px">{pilot_btn(r)}{book_btn(r, "btn btn-glass")}{wa}</div>
+</div></section>"""
+
+# Case studies: add only real projects, with the client's approval. Empty list = no section on the site.
+# Format: dict(company="Client name or e.g. 'Logistics company in Dubai'", field="Logistics", start="...", solution="...", result="...")
+CASES = []
+
+def cases_block(r):
+    if not CASES:
+        return ""
+    cards = "".join(f'<article class="case glass"><p class="kicker">{e(x["field"])}</p><h3>{e(x["company"])}</h3><p><b>Starting point:</b> {e(x["start"])}</p>'
+                    f'<p><b>Solution:</b> {e(x["solution"])}</p><p><b>Result:</b> {e(x["result"])}</p></article>' for x in CASES)
+    return f"""<section class="block" id="cases" style="padding-top:20px"><div class="wrap">
+  <div class="sec-head"><h2>From our pilot projects</h2><p>What clients in the UAE and GCC built with us.</p></div>
+  <div class="cases">{cards}</div>
+</div></section>
+"""
+
 PILOT_RULES = ["One use case: one agent, one workflow or one screen flow", "Up to 5 working days of build effort on our side", "You provide sample data and one contact person", "Runs in our test environment, not your live systems", "No contract and no cost if you say no"]
 
 def pricing():
@@ -897,12 +936,7 @@ def pricing():
         b = f'<span class="badge">{e(badge)}</span>' if badge else ""
         plans += f"""<article class="plan glass{' star' if star else ''}">{b}<h3>{e(name)}</h3><p class="unit">{e(forr)}</p><div class="price"><small>AED</small><b>{price}</b></div><p class="unit">per month, per company</p><ul>{f}</ul></article>"""
     faq = "".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in PRICE_FAQ)
-    steps = """<div class="steps s4">
-  <div class="step glass"><div class="step-dot">1</div><h3>Discovery call</h3><div class="dur">Free · 30 minutes</div><p>We find the task that costs your team the most time and what a solution would bring.</p></div>
-  <div class="step glass"><div class="step-dot">2</div><h3>Free pilot</h3><div class="dur">AED 0 · no obligation</div><p>A working pilot for one use case. You test it with your own examples and ask for as many changes as you need.</p></div>
-  <div class="step glass"><div class="step-dot">3</div><h3>Build</h3><div class="dur">Fixed price · only after your OK</div><p>Once you are convinced, we build the full solution at the agreed fixed price and connect your systems.</p></div>
-  <div class="step glass"><div class="step-dot">4</div><h3>Operate</h3><div class="dur">From AED 1,100 / month</div><p>Hosting, monitoring, updates and improvements for a fixed monthly fee per company.</p></div>
-</div>"""
+    steps = PILOT_STEPS
     body = hero + promise + f"""
 <section class="block" id="prices" style="padding-top:0"><div class="wrap">
   <div class="sec-head"><h2>Typical prices per service</h2><p>Starting prices below the usual UAE market rate, for the full solution after your free pilot. One-time and fixed, with no per-user fees.</p></div>
@@ -1159,6 +1193,27 @@ def contact():
     return page(r, "contact.html", *SEO["contact"], "contact", body, ld)
 
 
+def meet():
+    """Landing page for the QR code at events and trade shows (noindex, not in the sitemap)."""
+    r = ""
+    acts = [("Request a free pilot", "We build a working first version with your own examples", PILOT_URL, "")]
+    if BOOKING_URL: acts.insert(0, ("Book a 30-minute call", "Free video call at a time that suits you", BOOKING_URL, ' target="_blank" rel="noopener"'))
+    if WHATSAPP: acts.append(("Chat on WhatsApp", WHATSAPP_DISPLAY, WA_URL, ' target="_blank" rel="noopener"'))
+    acts += [("Try the live demos", "Click through real apps with example data", "use-cases/index.html", ""),
+             ("Save our contact", "Business card for your phone", "/assets/sda-ai-services.vcf", " download")]
+    cards = "".join(f'<a class="glass" href="{h}"{x}><b>{e(n)} <span class="arr">→</span></b><span>{e(m)}</span></a>' for n, m, h, x in acts)
+    svc = "".join(f'<a class="glass" href="{r}services/{s["slug"]}.html"><b>{e(s["name"])}</b><span>{e(", ".join(s["chips"]))}</span></a>' for s in SERVICES)
+    body = page_hero(r, [("Home", "index.html"), ("Meet", None)], "Great to meet you",
+                     "Everything from our conversation in one place: book a call, request a free pilot or try our live demos.") + f"""
+<section class="block" style="padding-top:12px"><div class="wrap"><div class="related meet-acts">{cards}</div></div></section>
+{pilot_section(r, 0)}
+<section class="block" style="padding-top:0"><div class="wrap">
+  <div class="sec-head left" style="margin-bottom:28px"><h2>What we build</h2><p>AI agents, automation and custom software for companies in the UAE and GCC.</p></div>
+  <div class="related">{svc}</div>
+</div></section>"""
+    return page(r, "meet.html", "Great to meet you", "Book a call, request a free pilot or try our live demos: everything from our conversation at a glance.", "", body, noindex=True)
+
+
 def simple_page(path, title, meta, h1, body_html, noindex=False):
     r = ""
     hdr = page_hero(r, [("Home", "index.html"), (title, None)], h1, meta)
@@ -1177,12 +1232,18 @@ def privacy():
     booking = ("<h2>Booking a call</h2><p>If you book a discovery call, Google Calendar (Google LLC) processes your name, email address and the "
                "details you enter to schedule the meeting and send you the invitation. The call takes place on Google Meet. We use these details "
                "only to prepare and hold the call.</p>") if BOOKING_URL else ""
+    ads = ("<h2>Google Ads conversion tracking</h2><p>If you agree in the cookie notice, we use Google Ads (Google LLC) to measure which of our ads lead to an "
+           "enquiry. Google sets cookies and processes your IP address, device data and the fact that you sent a request or clicked on a contact link. "
+           "Without your consent nothing is loaded. You can change your choice at any time via \"Cookie settings\" at the bottom of every page.</p>") if ADS_PRIVACY else ""
+    cookies = ("<p>This website sets cookies only for Google Ads conversion tracking, and only after your consent (see below). It does not use other advertising or tracking tools.</p>"
+               if ADS_PRIVACY else "<p>This website does not set cookies and does not use advertising or tracking tools.</p>")
     return simple_page("privacy.html", "Privacy policy", "How SDA AI Services handles personal data on this website and when you contact us.", "Privacy policy", f"""
 <p><b>Last updated:</b> {PRIVACY_UPDATED}</p>
 <h2>Who is responsible</h2><p>SDA SERVICES L.L.C-FZ (trading as {BRAND}), Meydan Grandstand, 6th floor, Meydan Road, Nad Al Sheba, Dubai, United Arab Emirates. Email: <a href="mailto:{EMAIL}">{EMAIL}</a>.</p>
 <h2>Data we process when you visit</h2><p>When you visit this website, our hosting provider processes technical data such as your IP address, browser type, the time of access and the pages you request. This is necessary to deliver the website securely and to protect it against attacks. We do not use this data to identify you.</p>
-<h2>Cookies</h2><p>This website does not set cookies and does not use advertising or tracking tools.</p>
+<h2>Cookies</h2>{cookies}
 {analytics}
+{ads}
 <h2>Contact form and email</h2><p>When you send the contact form or email us, we process your name, email address, company and message to answer your request and, if you wish, to prepare an offer. The form is processed on our hosting provider's infrastructure and delivered to our business mailbox. You receive a short automatic confirmation by email. We delete this data when it is no longer needed for that purpose, unless we must keep it by law.</p>
 {booking}
 {whatsapp}
@@ -1232,7 +1293,7 @@ def main():
         else:
             shutil.copy(f, OUT / "assets" / f.name)
     pages = {"index.html": home(), "contact.html": contact(), "services/index.html": services_hub(), "use-cases/index.html": uc_hub(),
-             "pricing.html": pricing(), "privacy.html": privacy(), "legal-notice.html": legal(), "thanks.html": thanks(), "404.html": not_found(),
+             "pricing.html": pricing(), "meet.html": meet(), "privacy.html": privacy(), "legal-notice.html": legal(), "thanks.html": thanks(), "404.html": not_found(),
              "about.html": about(), "insights/index.html": insights_hub()}
     for x in POSTS:
         pages[f"insights/{x['slug']}.html"] = post_page(x)
@@ -1265,7 +1326,7 @@ def main():
     lm = {k: v for k, v in lm.items() if k in pages}
     lm_file.write_text(json.dumps(lm, indent=1, sort_keys=True) + "\n")
     prio = lambda p: "1.0" if p == "index.html" else "0.9" if p in ("services/index.html", "pricing.html", "contact.html", "locations/dubai.html") or p.startswith("services/") else "0.3" if p in ("privacy.html", "legal-notice.html") else "0.8" if p.split("/")[0] in HUBS or p.startswith("insights/") or p == "about.html" else "0.7"
-    urls = "".join(f"  <url><loc>{abs_url(p)}</loc><lastmod>{lm[p]['date']}</lastmod><priority>{prio(p)}</priority></url>\n" for p in pages if p not in ("404.html", "thanks.html"))
+    urls = "".join(f"  <url><loc>{abs_url(p)}</loc><lastmod>{lm[p]['date']}</lastmod><priority>{prio(p)}</priority></url>\n" for p in pages if p not in ("404.html", "thanks.html", "meet.html"))
     (OUT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
     shutil.copy(ROOT / "src" / "_headers", OUT / "_headers")
     (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: {SITE_URL}/sitemap.xml\n")

@@ -17,3 +17,8 @@ https://sda-ai-f39.pages.dev/*
 
 https://:version.sda-ai-f39.pages.dev/*
   X-Robots-Tag: noindex
+
+# Business card on the event page (/meet): open as a contact instead of plain text
+/assets/sda-ai-services.vcf
+  Content-Type: text/vcard; charset=utf-8
+  Content-Disposition: attachment; filename="SDA-AI-Services.vcf"

@@ -859,3 +859,7 @@ footer .logo-svg{height:46px}
 @media print{.wa-float{display:none}}
 .foot-social{display:flex;gap:12px;flex-wrap:wrap}
 .kicker .sp{width:12px;height:12px;top:0;margin:0}
+/* Event page (/meet) and case studies */
+.meet-acts b{font-size:1.15rem}.meet-acts a{padding:26px}
+.cases{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.case{padding:26px;border-radius:var(--r-md);display:grid;gap:8px;align-content:start}.case p{margin:0}
+@media (max-width:760px){.cases{grid-template-columns:1fr}}

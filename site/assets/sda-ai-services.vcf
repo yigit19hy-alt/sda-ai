@@ -1,0 +1,11 @@
+BEGIN:VCARD
+VERSION:3.0
+N:;SDA AI Services;;;
+FN:SDA AI Services
+ORG:SDA SERVICES L.L.C-FZ
+TEL;TYPE=CELL,VOICE:+971542377342
+EMAIL;TYPE=WORK,INTERNET:yigit@sda-services.ai
+URL:https://sda-services.ai/
+ADR;TYPE=WORK:;;Meydan Grandstand, 6th floor, Meydan Road, Nad Al Sheba;Dubai;;;United Arab Emirates
+NOTE:AI agents, workflow automation and custom software for the UAE and GCC. Free pilot project.
+END:VCARD
