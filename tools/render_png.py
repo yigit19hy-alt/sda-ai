@@ -13,7 +13,7 @@ JOBS = [
     ("favicon-32.png", 32, 32, f'<img src="{svg("logo-mark.svg")}" style="width:32px;height:32px">'),
     ("icon-192.png", 192, 192, f'<img src="{svg("logo-mark.svg")}" style="width:192px;height:192px">'),
     ("icon-512.png", 512, 512, f'<img src="{svg("logo-mark.svg")}" style="width:512px;height:512px">'),
-    ("apple-touch-icon.png", 180, 180, f'<div style="width:180px;height:180px;background:#fff;display:grid;place-items:center"><img src="{svg("logo-mark.svg")}" style="width:150px;height:150px"></div>'),
+    ("apple-touch-icon.png", 180, 180, f'<div style="width:180px;height:180px;background:#0B1F2A"><img src="{svg("logo-mark.svg")}" style="width:180px;height:180px;display:block"></div>'),
     ("logo.png", 1200, 0, f'<img src="{svg("logo.svg")}" style="width:1200px;display:block">'),
     ("logo-stacked.png", 880, 880, f'<img src="{svg("logo-stacked.svg")}" style="width:880px;height:880px;display:block">'),
     ("og-image.png", 1200, 630, f'''
