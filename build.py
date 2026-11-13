@@ -1292,6 +1292,9 @@ def main():
             shutil.copytree(f, OUT / "assets" / f.name)
         else:
             shutil.copy(f, OUT / "assets" / f.name)
+    # QR card for events (/qr/): standalone page that can be added to the phone home screen, works offline
+    if (ROOT / "src" / "qr").is_dir():
+        shutil.copytree(ROOT / "src" / "qr", OUT / "qr")
     pages = {"index.html": home(), "contact.html": contact(), "services/index.html": services_hub(), "use-cases/index.html": uc_hub(),
              "pricing.html": pricing(), "meet.html": meet(), "privacy.html": privacy(), "legal-notice.html": legal(), "thanks.html": thanks(), "404.html": not_found(),
              "about.html": about(), "insights/index.html": insights_hub()}

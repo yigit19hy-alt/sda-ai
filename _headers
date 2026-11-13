@@ -22,3 +22,11 @@ https://:version.sda-ai-f39.pages.dev/*
 /assets/sda-ai-services.vcf
   Content-Type: text/vcard; charset=utf-8
   Content-Disposition: attachment; filename="SDA-AI-Services.vcf"
+
+# QR card (/qr/): not for search engines; the service worker must always be fresh
+/qr/*
+  X-Robots-Tag: noindex, nofollow
+
+/qr/sw.js
+  Cache-Control: no-cache
+  Service-Worker-Allowed: /qr/
