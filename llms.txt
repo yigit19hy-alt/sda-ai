@@ -17,6 +17,9 @@ Company: SDA SERVICES L.L.C-FZ, trade licence no. 2204440.01, formation no. 2204
 - [WhatsApp AI chatbot](https://sda-services.ai/solutions/whatsapp-ai-chatbot): WhatsApp AI chatbots for UAE businesses on the official WhatsApp Business Platform: answers, bookings, order status and human handover, in Arabic and English.
 - [Arabic AI assistant](https://sda-services.ai/solutions/arabic-ai-chatbot): Arabic AI chatbots and assistants for GCC companies: Modern Standard Arabic and Gulf dialects, right-to-left interfaces, answers from your own documents.
 - [AI document processing](https://sda-services.ai/solutions/ai-document-processing): AI document processing for UAE companies: invoices, delivery notes, contracts and forms in Arabic and English read, checked and entered into your ERP.
+- [AI chatbot development](https://sda-services.ai/solutions/ai-chatbot-development): Custom AI chatbots built in Dubai for your website, app and WhatsApp: answers from your own content, lead capture, bookings and handover to your team.
+- [AI voice agent](https://sda-services.ai/solutions/ai-voice-agent): AI voice agents for UAE and GCC businesses: calls answered in Arabic and English, bookings and status checks in your systems, warm transfer to your team.
+- [AI knowledge assistant](https://sda-services.ai/solutions/ai-knowledge-assistant): An AI assistant that answers staff questions from your own documents, with sources: policies, manuals, contracts and SOPs in Arabic and English.
 
 ## Industries
 - [Manufacturing](https://sda-services.ai/industries/manufacturing): AI for UAE and GCC manufacturers: supplier quality, 8D complaints, inspection data and production reporting connected to SAP and your ERP.
