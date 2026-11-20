@@ -16,7 +16,7 @@ dict(slug="ai-agent-cost-uae", date="2026-11-11",
              "Integrations, languages, channels and guardrails drive the price far more than the AI model itself.",
              "Plan for running costs: hosting and support from about AED 1,100 per month, plus AI model usage by volume.",
              "Start with a free or small pilot on your own data before you sign a large contract."],
-  topics=["ai-agents", "workflow-automation", "whatsapp-ai-chatbot", "dubai"],
+  topics=["ai-agents", "workflow-automation", "whatsapp-ai-chatbot", "dubai", "ai-voice-agent", "ai-knowledge-assistant"],
   body="""
 <h2>The short answer</h2>
 <p>A single, well-defined AI agent, such as a customer service assistant that answers from your documents and checks order status, starts at around AED 13,900 for the build. Each additional system, language, channel or approval step adds to that, so agents that act across several systems cost a multiple of the starting price. Larger platforms with several agents, many integrations or multi-country rollouts start from around AED 135,000. On top of the build come monthly running costs for hosting, monitoring and the AI model itself.</p>
@@ -78,7 +78,7 @@ dict(slug="choose-ai-automation-agency-dubai", date="2026-11-11",
              "Check how the agency handles data protection, hosting and access to your systems.",
              "Get a fixed price after a pilot, and make sure you own the code and data.",
              "Ask who runs and improves the system after launch, and at what monthly cost."],
-  topics=["ai-agents", "workflow-automation", "dubai"],
+  topics=["ai-agents", "workflow-automation", "dubai", "ai-chatbot-development"],
   body="""
 <h2>Why choosing well matters</h2>
 <p>An AI project touches your customers, your data and your core systems. A weak partner leaves you with a demo that impresses in a meeting but fails with real emails, real documents and real customers. The questions below are the ones we would ask ourselves if we were buying.</p>
@@ -190,7 +190,7 @@ dict(slug="ai-agent-vs-chatbot", date="2026-11-11",
              "Agents need access to your systems, permissions and approval rules.",
              "Start with a chatbot if questions are the problem; choose an agent if repetitive tasks are the problem.",
              "Many projects start as a chatbot and add agent actions step by step."],
-  topics=["ai-agents", "whatsapp-ai-chatbot", "arabic-ai-chatbot"],
+  topics=["ai-agents", "whatsapp-ai-chatbot", "arabic-ai-chatbot", "ai-chatbot-development"],
   body="""
 <h2>The simple definition</h2>
 <p>A <b>chatbot</b> is software that holds a conversation. Modern AI chatbots understand free text and answer from a knowledge source, such as your FAQs or documents.</p>
@@ -242,7 +242,7 @@ dict(slug="ai-data-protection-gcc", date="2026-11-11",
              "Kuwait has no single comprehensive law yet; sector rules apply, such as CITRA's regulation for licensed ICT providers.",
              "Key design questions: where data is stored, which AI provider processes it, and how transfers abroad are handled.",
              "Plan privacy into the architecture from the start; your legal team makes the final assessment."],
-  topics=["ai-agents", "data-management", "abu-dhabi", "saudi-arabia", "qatar", "kuwait", "bahrain", "oman", "dubai"],
+  topics=["ai-agents", "data-management", "abu-dhabi", "saudi-arabia", "qatar", "kuwait", "bahrain", "oman", "dubai", "ai-knowledge-assistant"],
   body="""
 <p><i>This article is a practical overview for planning AI projects, not legal advice. Laws and regulations change; check the current texts with your legal advisers.</i></p>
 
@@ -465,7 +465,7 @@ dict(slug="arabic-ai-chatbot-guide", date="2026-11-12",
              "One assistant can answer in Arabic or English, following the language the customer uses.",
              "Right-to-left layouts, Arabic names and numbers need deliberate design and testing.",
              "Answers should come from your own approved content, with a clear hand-over to a person."],
-  topics=["arabic-ai-chatbot", "whatsapp-ai-chatbot", "ai-agents"],
+  topics=["arabic-ai-chatbot", "whatsapp-ai-chatbot", "ai-agents", "ai-voice-agent"],
   body="""
 <h2>Why Arabic needs more than a translation</h2>
 <p>An Arabic chatbot is not an English chatbot with translated texts. Customers write in Modern Standard Arabic, in Gulf dialect, in Arabizi (Arabic written with Latin letters and numbers) or in a mix of Arabic and English. They expect the answer in the same style, with correct names, dates and numbers.</p>

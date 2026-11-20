@@ -504,8 +504,10 @@ ORG_LD = {"@context": "https://schema.org", "@type": "ProfessionalService", "@id
           "areaServed": [{"@type": "Country", "name": c} for c in GCC],
           "knowsLanguage": ["en", "ar"], "priceRange": "AED 10,900+",
           "knowsAbout": ["AI agents", "Workflow automation", "Custom web applications", "Mobile apps", "Data management", "SAP integration"]}
-if PHONE:
-    ORG_LD["telephone"] = PHONE; ORG_LD["contactPoint"][0]["telephone"] = PHONE
+if PHONE or WHATSAPP:
+    # no landline yet: the WhatsApp business number doubles as the phone number in the structured data (same number as in directory listings)
+    _tel = PHONE.replace(" ", "") if PHONE else "+" + WHATSAPP
+    ORG_LD["telephone"] = _tel; ORG_LD["contactPoint"][0]["telephone"] = _tel
 if LICENSE_NO or FORMATION_NO:
     ORG_LD["identifier"] = ([{"@type": "PropertyValue", "propertyID": "Trade licence number", "value": LICENSE_NO}] if LICENSE_NO else []) + \
                            ([{"@type": "PropertyValue", "propertyID": "Formation number", "value": FORMATION_NO}] if FORMATION_NO else [])
@@ -1144,7 +1146,11 @@ def post_page(x):
     meta_line = f'<div class="post-meta"><span>{_fmt_date(x["date"])}</span><span>{_read_min(x)} min read</span><span>By {BRAND}</span></div>'
     take = "".join(f"<li>{e(t)}</li>" for t in x["takeaways"])
     faq = "".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in x["faq"])
-    others = [y for y in POSTS if y["slug"] != x["slug"]][:2]
+    # "Keep reading": the articles that share the most topics with this one, so every article gets internal links
+    # (ties are broken by position in the list, rotated per article, so links spread evenly instead of all pointing at the newest posts)
+    _i = [y["slug"] for y in POSTS].index(x["slug"])
+    _rot = POSTS[_i + 1:] + POSTS[:_i]
+    others = sorted(_rot, key=lambda y: len(set(y["topics"]) & set(x["topics"])), reverse=True)[:2]
     more = "".join(f'<a class="glass" href="{y["slug"]}.html"><small>Guide</small><b>{e(y["h1"])}</b><span>{e(y["lede"])}</span></a>' for y in others)
     body = page_hero(r, items, e(x["h1"]), e(x["lede"]), meta_line) + f"""
 <section class="block" style="padding-top:36px"><div class="wrap"><article class="article">
@@ -1332,6 +1338,9 @@ def main():
     urls = "".join(f"  <url><loc>{abs_url(p)}</loc><lastmod>{lm[p]['date']}</lastmod><priority>{prio(p)}</priority></url>\n" for p in pages if p not in ("404.html", "thanks.html", "meet.html"))
     (OUT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
     shutil.copy(ROOT / "src" / "_headers", OUT / "_headers")
+    # /favicon.ico for crawlers and tools that request it directly instead of reading the <link rel="icon"> tags
+    if (ROOT / "src" / "assets" / "brand" / "favicon.ico").exists():
+        shutil.copy(ROOT / "src" / "assets" / "brand" / "favicon.ico", OUT / "favicon.ico")
     (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: {SITE_URL}/sitemap.xml\n")
     # llms.txt: plain-language map of the site for AI search engines (ChatGPT, Perplexity, Gemini, Claude)
     sec = lambda items: "".join(f"- [{n}]({u}): {d}\n" for n, u, d in items)
