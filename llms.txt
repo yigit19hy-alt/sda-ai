@@ -20,6 +20,7 @@ Company: SDA SERVICES L.L.C-FZ, trade licence no. 2204440.01, formation no. 2204
 - [AI chatbot development](https://sda-services.ai/solutions/ai-chatbot-development): Custom AI chatbots built in Dubai for your website, app and WhatsApp: answers from your own content, lead capture, bookings and handover to your team.
 - [AI voice agent](https://sda-services.ai/solutions/ai-voice-agent): AI voice agents for UAE and GCC businesses: calls answered in Arabic and English, bookings and status checks in your systems, warm transfer to your team.
 - [AI knowledge assistant](https://sda-services.ai/solutions/ai-knowledge-assistant): An AI assistant that answers staff questions from your own documents, with sources: policies, manuals, contracts and SOPs in Arabic and English.
+- [AI consulting](https://sda-services.ai/solutions/ai-consulting): AI consulting that ends in working software: use-case assessment, data and system check and a free pilot for companies in the UAE and across the GCC.
 
 ## Industries
 - [Manufacturing](https://sda-services.ai/industries/manufacturing): AI for UAE and GCC manufacturers: supplier quality, 8D complaints, inspection data and production reporting connected to SAP and your ERP.
@@ -31,12 +32,12 @@ Company: SDA SERVICES L.L.C-FZ, trade licence no. 2204440.01, formation no. 2204
 
 ## Regions
 - [Dubai](https://sda-services.ai/locations/dubai): Dubai AI agency for AI agents, workflow automation and custom software. Office in Meydan, Arabic and English, UAE hosting, free pilot project.
-- [Abu Dhabi](https://sda-services.ai/locations/abu-dhabi): AI agents, automation and custom software for companies in Abu Dhabi. UAE-based team, Arabic and English, UAE data protection, free pilot project.
-- [Saudi Arabia](https://sda-services.ai/locations/saudi-arabia): AI agents, automation and custom software for companies in Riyadh, Jeddah and Dammam. Arabic-first, PDPL-aware, hosting options in the Kingdom.
-- [Qatar](https://sda-services.ai/locations/qatar): AI agents, automation and custom software for companies in Doha and across Qatar. Arabic and English, Qatar data protection, free pilot project.
-- [Kuwait](https://sda-services.ai/locations/kuwait): AI agents, workflow automation and custom software for companies in Kuwait. Arabic and English assistants, ERP integration and a free pilot project.
-- [Bahrain](https://sda-services.ai/locations/bahrain): AI agents, automation and custom software for companies in Manama and across Bahrain. PDPL-aware design, local cloud hosting, Arabic and English.
-- [Oman](https://sda-services.ai/locations/oman): AI agents, automation and custom software for companies in Muscat and across Oman. Designed for Oman's PDPL, Arabic and English, free pilot project.
+- [Abu Dhabi](https://sda-services.ai/locations/abu-dhabi): AI consultants and developers for companies in Abu Dhabi: AI agents, automation and custom software. UAE-based team, Arabic and English, free pilot.
+- [Saudi Arabia](https://sda-services.ai/locations/saudi-arabia): AI consultants and developers for companies in Riyadh, Jeddah and Dammam: AI agents, automation, custom software. Arabic-first, PDPL-aware, free pilot.
+- [Qatar](https://sda-services.ai/locations/qatar): AI consultants and developers for companies in Doha and across Qatar: AI agents, automation and custom software. Arabic and English, free pilot project.
+- [Kuwait](https://sda-services.ai/locations/kuwait): AI consultants and developers for companies in Kuwait City and across Kuwait: AI agents, workflow automation, custom software and a free pilot project.
+- [Bahrain](https://sda-services.ai/locations/bahrain): AI consultants and developers for companies in Manama and across Bahrain: AI agents, automation and custom software. PDPL-aware, Arabic and English.
+- [Oman](https://sda-services.ai/locations/oman): AI consultants and developers for companies in Muscat and across Oman: AI agents, automation and custom software. Built for Oman's PDPL, free pilot.
 
 ## Live demos
 - [Workflow management](https://sda-services.ai/use-cases/workflow-management): Interactive workflow management demo: tasks, approvals, process templates and document management for teams that want less email.

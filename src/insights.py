@@ -16,7 +16,7 @@ dict(slug="ai-agent-cost-uae", date="2026-11-11",
              "Integrations, languages, channels and guardrails drive the price far more than the AI model itself.",
              "Plan for running costs: hosting and support from about AED 1,100 per month, plus AI model usage by volume.",
              "Start with a free or small pilot on your own data before you sign a large contract."],
-  topics=["ai-agents", "workflow-automation", "whatsapp-ai-chatbot", "dubai", "ai-voice-agent", "ai-knowledge-assistant"],
+  topics=["ai-agents", "workflow-automation", "whatsapp-ai-chatbot", "dubai", "ai-voice-agent", "ai-knowledge-assistant", "ai-consulting"],
   body="""
 <h2>The short answer</h2>
 <p>A single, well-defined AI agent, such as a customer service assistant that answers from your documents and checks order status, starts at around AED 13,900 for the build. Each additional system, language, channel or approval step adds to that, so agents that act across several systems cost a multiple of the starting price. Larger platforms with several agents, many integrations or multi-country rollouts start from around AED 135,000. On top of the build come monthly running costs for hosting, monitoring and the AI model itself.</p>
@@ -78,7 +78,7 @@ dict(slug="choose-ai-automation-agency-dubai", date="2026-11-11",
              "Check how the agency handles data protection, hosting and access to your systems.",
              "Get a fixed price after a pilot, and make sure you own the code and data.",
              "Ask who runs and improves the system after launch, and at what monthly cost."],
-  topics=["ai-agents", "workflow-automation", "dubai", "ai-chatbot-development"],
+  topics=["ai-agents", "workflow-automation", "dubai", "ai-chatbot-development", "ai-consulting"],
   body="""
 <h2>Why choosing well matters</h2>
 <p>An AI project touches your customers, your data and your core systems. A weak partner leaves you with a demo that impresses in a meeting but fails with real emails, real documents and real customers. The questions below are the ones we would ask ourselves if we were buying.</p>
@@ -288,7 +288,7 @@ dict(slug="ai-data-protection-gcc", date="2026-11-11",
        ("Does Saudi Arabia require data to stay in the Kingdom?", "The Saudi PDPL restricts transfers of personal data outside the Kingdom and sets conditions for them. Many companies therefore host personal data in Saudi cloud regions."),
        ("Does Kuwait have a data protection law?", "Kuwait has no single comprehensive data protection law yet. CITRA's Data Privacy Protection Regulation applies to licensed telecom and ICT service providers, and sector rules apply in areas such as banking.")]),
 
-dict(slug="ai-invoice-processing-sap", date="2026-11-11",
+dict(slug="ai-invoice-processing-sap", date="2026-11-11", updated="2026-11-20",
   title="AI Invoice Processing with SAP: How It Works",
   meta="How AI invoice processing works with SAP S/4HANA and other ERPs: reading invoices, matching purchase orders, posting, exception handling and typical timelines.",
   h1="AI invoice processing with SAP: how it works",
@@ -314,6 +314,17 @@ dict(slug="ai-invoice-processing-sap", date="2026-11-11",
 <h3>5. Learn and report</h3>
 <p>A dashboard shows volumes, processing times, exception reasons and suppliers that cause the most rework, so you can fix problems at the source.</p>
 
+<h2>Invoice matching in SAP S/4HANA</h2>
+<p>SAP checks a supplier invoice against the purchase order and, for goods, against the goods receipt. This is the three-way match of logistics invoice verification. An AI invoice reader does not replace that check. It prepares the invoice so that the check can run without typing.</p>
+<ul>
+<li><b>Find the purchase order:</b> the AI reads the PO number from the invoice or, if it is missing, finds the open order from supplier, material and amount.</li>
+<li><b>Match the lines:</b> each invoice line is assigned to a PO item, even when the supplier uses its own article numbers or descriptions.</li>
+<li><b>Compare quantity and price:</b> invoiced quantity against goods receipt, invoiced price against PO price, within the tolerance limits you have set in SAP.</li>
+<li><b>Check the tax:</b> the VAT amount and tax code are checked against the invoice lines, and the supplier's tax registration number against the vendor master.</li>
+<li><b>Detect duplicates:</b> the same invoice number, date and amount from the same supplier is stopped before posting.</li>
+</ul>
+<p>Invoices inside the tolerances are posted. Invoices outside them are parked or blocked for payment as usual in SAP, and the responsible buyer or accountant receives the difference in plain words. Invoices without a purchase order go to the cost-centre owner for coding and approval.</p>
+
 <h2>How it connects to SAP</h2>
 <p>We connect through approved interfaces, such as OData services and APIs in SAP S/4HANA or extensions on SAP BTP, so the SAP core stays clean. The same approach works with other ERP systems. Approval rules, authorisations and posting logic stay in your control.</p>
 
@@ -329,7 +340,8 @@ dict(slug="ai-invoice-processing-sap", date="2026-11-11",
 </ul>
 <p>See the invoice flow on our <a href="{r}solutions/ai-document-processing.html">AI document processing</a> page, learn how we work with <a href="{r}services/sap-integration.html">SAP integration</a>, or <a href="{r}contact.html">send us a few sample invoices</a> for a free pilot.</p>
 """,
-  faq=[("Does AI invoice processing work with SAP S/4HANA?", "Yes. AI reads the invoices and posts them to SAP S/4HANA through approved interfaces such as OData services or SAP BTP, without changes to the SAP core."),
+  faq=[("What is three-way matching in SAP?", "The invoice is compared with the purchase order and the goods receipt. If quantity and price agree within your tolerance limits, the invoice can be posted and paid; if not, it is blocked until someone clears the difference."),
+       ("Does AI invoice processing work with SAP S/4HANA?", "Yes. AI reads the invoices and posts them to SAP S/4HANA through approved interfaces such as OData services or SAP BTP, without changes to the SAP core."),
        ("Can AI read Arabic invoices?", "Yes. Current AI models read English and Arabic invoices, including scans, and extract the fields needed for posting."),
        ("Do we need a template for each supplier?", "No. Unlike older OCR tools, AI models understand different invoice layouts without a template per supplier."),
        ("What happens with invoices that do not match?", "They go to the right person with the exact reason, such as a price difference or a missing goods receipt, so they can be resolved quickly.")]),
@@ -456,7 +468,7 @@ dict(slug="zatca-e-invoicing-phase-2", date="2026-11-12",
        ("How will I know if my business is in a wave?", "ZATCA notifies the targeted taxpayers of each wave directly, at least six months before their integration deadline."),
        ("Is a PDF invoice enough for ZATCA Phase 2?", "No. Phase 2 requires structured XML invoices exchanged with the Fatoora platform. A PDF emailed to the customer does not meet the requirement.")]),
 
-dict(slug="arabic-ai-chatbot-guide", date="2026-11-12",
+dict(slug="arabic-ai-chatbot-guide", date="2026-11-12", updated="2026-11-20",
   title="Arabic AI Chatbot for Business: What Works",
   meta="How to build an Arabic AI chatbot that customers trust: Gulf dialect, Arabic and English in one bot, right-to-left design, testing and typical costs in the UAE.",
   h1="Arabic AI chatbots for business: what works",
@@ -497,6 +509,35 @@ dict(slug="arabic-ai-chatbot-guide", date="2026-11-12",
 <li>Tells users that they are talking to an AI assistant.</li>
 </ul>
 
+<h2>Which AI models work for Arabic</h2>
+<p>There are two groups. General-purpose models from Anthropic, OpenAI and Google are trained on many languages and handle Arabic well, including dialects. Arabic-focused models are built in the region: Jais from Abu Dhabi, ALLaM from Saudi Arabia, Falcon Arabic from the Technology Innovation Institute in Abu Dhabi and Fanar from Qatar.</p>
+<p>No model wins every task. One may be better at Gulf dialect, another at following instructions or reading long documents, and prices differ. The reliable way to choose is to run the same set of your real customer messages through several models and compare the answers side by side.</p>
+
+<h2>How to test an Arabic chatbot before launch</h2>
+<ol>
+<li><b>Collect real messages.</b> A few hundred from WhatsApp, email and your call notes, with dialect, typos, Arabizi and mixed Arabic and English.</li>
+<li><b>Write down the right answer</b> for each, or at least what a good answer must contain.</li>
+<li><b>Let a native speaker score</b> the chatbot's answers for correctness, tone and language. Automatic scores miss awkward wording.</li>
+<li><b>Test the edges:</b> questions the chatbot must refuse, angry customers, requests for a person, names and numbers in both scripts.</li>
+<li><b>Repeat the test</b> after every change to the content, the instructions or the model.</li>
+</ol>
+
+<h2>Arabic on the phone and in voice notes</h2>
+<p>Speech is harder than text. Recognition quality depends on the dialect, the line quality and background noise, and brand or product names are often misheard. For voice notes on WhatsApp the chatbot can ask a short confirmation question when it is unsure. For phone lines, an <a href="../solutions/ai-voice-agent.html">AI voice agent</a> should always be able to transfer the call to a person.</p>
+
+<h2>Where the conversations are processed</h2>
+<p>Customer messages contain personal data. Decide early where the model runs and where conversations are stored: in a cloud region in the UAE or another GCC country, or in your own environment. The rules differ by country; our overview of <a href="ai-data-protection-gcc.html">AI and data protection in the GCC</a> explains them.</p>
+
+<h2>Arabic chatbot checklist</h2>
+<ul>
+<li>Real customer messages collected for testing, including dialect and Arabizi</li>
+<li>Key content available in reviewed Arabic, not only machine translated</li>
+<li>Right-to-left layout tested on real phones</li>
+<li>Search by name, phone and order number works in both scripts</li>
+<li>Clear hand-over to a person, with opening hours</li>
+<li>Hosting and data storage decided and documented</li>
+</ul>
+
 <h2>Channels</h2>
 <p>Most GCC businesses start with <a href="whatsapp-ai-chatbot-business-uae.html">WhatsApp</a> and a web chat, then add voice or internal assistants for staff. The same knowledge and rules can serve every channel.</p>
 
@@ -504,7 +545,8 @@ dict(slug="arabic-ai-chatbot-guide", date="2026-11-12",
 <p>A focused assistant that answers from your own content typically starts around AED 13,900 for the build, excluding VAT, plus monthly running costs. Arabic and English, several channels and system integrations add to the scope. See our <a href="ai-agent-cost-uae.html">AI agent cost guide</a> and <a href="../pricing.html">pricing</a>.</p>
 <p>Want to see it with your own questions? <a href="../contact.html">Request a free pilot</a> or read more about our <a href="../solutions/arabic-ai-chatbot.html">Arabic AI assistants</a>.</p>
 """,
-  faq=[("Can an AI chatbot understand Gulf Arabic dialect?", "Yes. Current AI models understand Gulf dialect and other Arabic varieties well. Quality should still be tested with a sample of real messages from your customers."),
+  faq=[("Which AI model is best for an Arabic chatbot?", "There is no single best model. General-purpose models from Anthropic, OpenAI and Google and Arabic-focused models such as Jais, ALLaM, Falcon Arabic and Fanar each have strengths. Test them on your own customer messages and choose by the results."),
+       ("Can an AI chatbot understand Gulf Arabic dialect?", "Yes. Current AI models understand Gulf dialect and other Arabic varieties well. Quality should still be tested with a sample of real messages from your customers."),
        ("Can one chatbot answer in Arabic and English?", "Yes. The assistant detects the customer's language and answers in Arabic or English, and can switch within the same conversation."),
        ("Can the chatbot understand WhatsApp voice notes in Arabic?", "Yes. Voice notes are converted to text with speech recognition and then answered like written messages."),
        ("Do we need our content in Arabic?", "It helps. The assistant can translate on the fly, but key texts such as policies and prices should ideally exist in Arabic and be reviewed by a native speaker.")]),
